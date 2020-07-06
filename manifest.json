@@ -1,0 +1,17 @@
+{
+    "initial": [
+"dist/constants.min.js",
+"dist/math.min.js",
+"dist/runner.min.js",
+"dist/settings.min.js",
+"dist/ticker.min.js",
+"dist/utils.min.js",
+"dist/display.min.js",
+"dist/core.min.js",
+"dist/loaders.min.js",
+"dist/app.min.js"
+    ],
+    "game": [
+        "dist/index.js"
+    ]
+}

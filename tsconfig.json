@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "allowJs": true,
+        "noImplicitAny": false,//
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "dist/index.js",
+        "outDir": "dist",
+        // "sourceMap": true,
+        "declaration": false,
+        //"declarationMap": true,
+        "target": "es5",
+        "composite": false,
+        "typeRoots": [
+            "./typings"
+        ]
+    },
+    "include": [
+        "src/**/*",
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.d.ts"
+    ]
+}

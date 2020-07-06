@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>h5sun.com</title>
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="true" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+    <style>
+        html,
+        body {
+            -ms-touch-action: none;
+            background: #ffffff;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: gainsboro;
+        }
+    </style>
+    <script src="vconsole.min.js"></script>
+    <script src="stats.min.js"></script>
+    <!-- debug -->
+    <script src="js/pixi.js"></script>
+    <script src="dist/index.js"></script>
+    <!-- release -->
+    <!-- <script src="release/index.js"></script> -->
+</head>
+
+<body>
+    <canvas id="game"></canvas>
+    <script>
+
+        window.onload = () => {
+            PIXI.Renderer.registerPlugin('accessibility', PIXI.AccessibilityManager);
+            PIXI.Renderer.registerPlugin('batch', PIXI.BatchRenderer);
+            PIXI.Renderer.registerPlugin('extract', PIXI.Extract);
+            PIXI.Renderer.registerPlugin('interaction', PIXI.InteractionManager);
+            PIXI.Renderer.registerPlugin('particle', PIXI.ParticleRenderer);
+            PIXI.Renderer.registerPlugin('prepare', PIXI.Prepare);
+            PIXI.Loader.registerPlugin(PIXI.SpritesheetLoader);
+            let canvas = document.getElementById('game');
+            var app = new Main(canvas);
+        }
+    </script>
+</body>
+
+</html>
