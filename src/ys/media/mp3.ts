@@ -38,7 +38,6 @@ namespace ys {
                 this.audio.currentTime = this.startTime;
                 this.audio.play();
             }
-
         }
 
         private onPlayEnd() {

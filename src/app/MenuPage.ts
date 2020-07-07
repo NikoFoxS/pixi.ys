@@ -1,28 +1,3 @@
-class MenuPageMediator extends ys.Mediator {
-    constructor(view: ys.View) {
-        super(view);
-    }
-
-    public onInit() {
-        console.log(this, 'init');
-        this.registerCommand(StartCMD);
-
-        var v = this.getView() as MenuPage;
-        v.bg.interactive = true;
-        v.bg.on('pointerdown', () => {
-            this.sendNotice('StartCMD', { name: 'FoxS' })
-        }, this);
-    }
-
-    protected listenNotice(): string[] {
-        return [];
-    }
-
-    protected onNotice(no: ys.Notice) {
-
-    }
-}
-
 class MenuPage extends ys.Page {
     constructor() {
         super();
@@ -30,7 +5,7 @@ class MenuPage extends ys.Page {
 
     public bg: PIXI.Sprite;
     protected onInit() {
-        console.log('added')
+
         GG.newRect(stageW, stageH, 0xff00ff, this);
         const m = new PIXI.Matrix();
         // m.scale(2,3);
@@ -70,6 +45,13 @@ class MenuPage extends ys.Page {
         GG.setAncher(btn, 0.5, 0.5);
         btn.x = stageHalfW;
         btn.y = stageH * 0.7;
+        btn.interactive = true;
+        btn.buttonMode = true;
+        btn.on('pointertap', () => {
+            const mp3 = new ys.MP3(RES.getRes('bgm_mp3'));
+            mp3.play();
+            console.log('play ')
+        }, this)
 
         const star = new PIXI.Graphics();
         star.beginFill(0xffff00);
@@ -90,6 +72,31 @@ class MenuPage extends ys.Page {
     }
 
     protected onRemoved() {
+
+    }
+}
+
+class MenuPageMediator extends ys.Mediator {
+    constructor(view: ys.View) {
+        super(view);
+    }
+
+    public onInit() {
+        console.log(this, 'init');
+        this.registerCommand(StartCMD);
+
+        var v = this.getView() as MenuPage;
+        v.bg.interactive = true;
+        v.bg.on('pointerdown', () => {
+            this.sendNotice('StartCMD', { name: 'FoxS' })
+        }, this);
+    }
+
+    protected listenNotice(): string[] {
+        return [];
+    }
+
+    protected onNotice(no: ys.Notice) {
 
     }
 }
