@@ -31,7 +31,6 @@ namespace ys {
                 a.removeEventListener("ended", this.onPlayEnd);
                 a.pause();
             }, 200);
-
         }
         private startTime: number;
         private _play() {
