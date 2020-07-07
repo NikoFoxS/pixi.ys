@@ -57,7 +57,6 @@ namespace ysui {
             this.padding = padding;
         }
 
-
         private padding: number;
         private btnW: number;
         private btnH: number;
