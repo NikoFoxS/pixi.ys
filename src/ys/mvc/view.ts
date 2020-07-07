@@ -60,20 +60,27 @@ namespace ys {
 		}
 	}
 	//复制界面布局和样式
-	export class View extends PIXI.Container implements ILoadGroupReport {
+	export class View extends PIXI.Container {
+		constructor() {
+			super();
+			this.once('added', this.onAdded, this);
+			this.once('removed', this.onRemoved, this);
+		}
+
+		public addMediator(mediatorClass: any) {
+			mediatorClass && new mediatorClass(this);
+		}
+
+		protected onAdded() {
+		}
+
+		protected onRemoved() {
+		}
+	}
+
+	export class Page extends View implements ILoadGroupReport{
 		constructor(mediatorClass?: any, groupName?: string) {
 			super();
-			//添加中间人
-			let m: ys.Mediator;
-			mediatorClass && (m = new mediatorClass(this));
-
-			var start = () => {
-				this.once('added',this.onAdded,this);
-				this.once('removed',this.onRemoved,this);
-				this.onInit();
-				m && m.onInit();
-			}
-
 			//加载资源组
 			if (groupName) {
 				this.onGroupStart(groupName);
@@ -81,11 +88,19 @@ namespace ys {
 					this.onGroupProgress(groupName, loaded, total, res);
 				}, () => {
 					this.onGroupComplete(groupName);
-					start();
+					this.onInit();
+					this.addMediator(mediatorClass);
 				}, this);
 			} else {
-				start();
+				this.onInit();
+				this.addMediator(mediatorClass);
 			}
+		}
+
+		public cache: boolean;
+
+		protected onInit() {
+
 		}
 
 		public onGroupStart(groupName: string) {
@@ -97,23 +112,5 @@ namespace ys {
 		public onGroupComplete(groupName: string) {
 		}
 
-		protected onInit() {
-			
-		}
-
-		protected onAdded() {
-		}
-
-		protected onRemoved() {
-		}
-	}
-
-	export class Page extends View {
-		constructor(mediatorClass?: any, groupName?: string) {
-			super(mediatorClass, groupName);
-		}
-
-		public cache:boolean;
-		
 	}
 }

@@ -104,7 +104,8 @@ namespace RES {
                     loaded++;
                     //保存非纹理资源,纹理资源pixi会自动保存到PIXI.utils.TextureCache
                     if (res.type != PIXI.LoaderResource.TYPE.IMAGE) {
-                        myCache[res.name] = res;
+                        //音频和json都保存在data里
+                        myCache[res.name] = res.data;
                     }
                     onProgress.call(thisObject, loaded, total,res);
                 });
