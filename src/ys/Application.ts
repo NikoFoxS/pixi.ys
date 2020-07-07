@@ -9,6 +9,9 @@
 let stageW: number, stageH: number, stageHalfW: number, stageHalfH: number;
 
 namespace ys {
+
+    export const stage:PIXI.Container = new PIXI.Container();
+
     export interface ILoadGroupReport {
         onGroupStart(groupName: string): void;
         onGroupProgress(groupName: string, loaded: number, total: number, res: PIXI.LoaderResource): void;
@@ -36,7 +39,7 @@ namespace ys {
 
             ys.canvas = renderer.view;
 
-            var stage = GG.stage;
+            var stage = ys.stage;
             RES.setup(cfg);
 
             const ticker = PIXI.Ticker.shared;

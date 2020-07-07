@@ -23,7 +23,7 @@ class Main extends ys.Application{
             return url
         }
         //处理多语言
-        ys.getLocale = (t: string) => {
+        ysui.getLocale = (t: string) => {
             return t;
         }
         
@@ -43,7 +43,6 @@ class Main extends ys.Application{
     }
 
     protected onStart() {
-        console.log('.....')
         GG.showPage(MenuPage);
     }
 }

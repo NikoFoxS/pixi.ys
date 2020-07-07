@@ -51,6 +51,7 @@ let files = `
 <script src="https://pixijs.download/release/packages/sprite.js"></script>
 <script src="https://pixijs.download/release/packages/accessibility.js"></script>
 <script src="https://pixijs.download/release/packages/graphics.js"></script>
+<script src="https://pixijs.download/release/packages/graphics-extras.js"></script>
 <script src="https://pixijs.download/release/packages/mesh-extras.js"></script>
 <script src="https://pixijs.download/release/packages/mixin-cache-as-bitmap.js"></script>
 <script src="https://pixijs.download/release/packages/spritesheet.js"></script>
