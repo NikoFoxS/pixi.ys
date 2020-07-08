@@ -32,7 +32,7 @@ namespace ys {
             var renderer = new PIXI.Renderer({
                 view: canvas,
                 width: innerWidth, height: innerHeight,
-                resolution: devicePixelRatio, autoDensity: true,
+                resolution: cfg.pixelRatio, autoDensity: true,
                 antialias: cfg.antialias,
                 backgroundColor: cfg.backgroundColor
             });
@@ -133,3 +133,5 @@ namespace ys {
         }
     }
 }
+
+window.ys = ys;

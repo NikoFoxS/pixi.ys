@@ -1,7 +1,7 @@
 /// <reference path="ys/Application.ts"/>
 
 class Main extends ys.Application{
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement,canvasWidth,canvasHeight,pixelRatio) {
         const cfg = new ys.Config()
         cfg.groups = ['preload'];//配置加载资源组
         cfg.resourceJSON = 'resource/default.res.json';//配置default.res.json的路径
@@ -10,12 +10,13 @@ class Main extends ys.Application{
         cfg.scaleMode = 'fixedWidth';
         cfg.stageWidth = 750;
         cfg.stageHeight = 1334; // iphone6=750x1334 iphoneX=750x1624
-        cfg.canvasWidth = innerWidth;
-        cfg.canvasHeight = innerHeight;
+        cfg.canvasWidth = canvasWidth;
+        cfg.canvasHeight = canvasHeight;
         cfg.proxy = []; //添加数据代理
         cfg.command = [] //添加通知指令
         cfg.mockAjax = false;
         cfg.backgroundColor = 0x000000;
+        cfg.pixelRatio = pixelRatio;
         cfg.antialias = true;
         cfg.screenAdapter = null;
         //处理加载项

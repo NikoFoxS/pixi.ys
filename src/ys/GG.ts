@@ -122,3 +122,5 @@ namespace GG {
 
 
 }
+
+window.GG = GG;

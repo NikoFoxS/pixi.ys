@@ -1,6 +1,6 @@
 namespace ys
 {
-    export class MP4
+    export class Video
     {
         constructor(){}
     }

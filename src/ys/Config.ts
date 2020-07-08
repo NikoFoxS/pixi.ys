@@ -18,5 +18,6 @@ namespace ys {
         public versionFun: Function;
         public screenAdapter: ys.IScreenAdapter;
         public resizeto: any;
+        public pixelRatio: number;
     }
 }
