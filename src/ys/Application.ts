@@ -22,16 +22,16 @@ namespace ys {
     export let tikcer: PIXI.Ticker;
     export class Application implements ys.ILoadGroupReport {
         constructor(canvas: HTMLCanvasElement, cfg: Config) {
-
+            console.log('PIXI::',PIXI);
             PIXI.utils.skipHello();
 
             //自动显示VConsole
-            const VConsole = (<any>window).VConsole;
-            VConsole && new VConsole()
+            // const VConsole = (<any>window).VConsole;
+            // VConsole && new VConsole()
 
             var renderer = new PIXI.Renderer({
                 view: canvas,
-                width: innerWidth, height: innerHeight,
+                width: cfg.canvasWidth, height: cfg.canvasHeight,
                 resolution: cfg.pixelRatio, autoDensity: true,
                 antialias: cfg.antialias,
                 backgroundColor: cfg.backgroundColor
@@ -45,25 +45,29 @@ namespace ys {
             const ticker = PIXI.Ticker.shared;
             ys.tikcer = ticker;
 
-            document.body.addEventListener('focusout', () => {
-                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-            })
+            // document.body.addEventListener('focusout', () => {
+            //     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            // })
 
-            const Stats = (<any>window).Stats;
-            if (Stats) {
-                var stats = new Stats();
-                stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.body.appendChild(stats.dom);
-                ticker.add(() => {
-                    stats.begin();
-                    renderer.render(stage);
-                    stats.end();
-                }, PIXI.UPDATE_PRIORITY.LOW);
-            } else {
-                ticker.add(() => {
-                    renderer.render(stage);
-                }, PIXI.UPDATE_PRIORITY.LOW);
-            }
+            // const Stats = (<any>window).Stats;
+            // if (Stats) {
+            //     var stats = new Stats();
+            //     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+            //     document.body.appendChild(stats.dom);
+            //     ticker.add(() => {
+            //         stats.begin();
+            //         renderer.render(stage);
+            //         stats.end();
+            //     }, PIXI.UPDATE_PRIORITY.LOW);
+            // } else {
+            //     ticker.add(() => {
+            //         renderer.render(stage);
+            //     }, PIXI.UPDATE_PRIORITY.LOW);
+            // }
+            console.log('>>',ticker,stage)
+            ticker.add(() => {
+                renderer.render(stage);
+            }, PIXI.UPDATE_PRIORITY.LOW);
             ticker.start();
 
             this.resize(canvas, stage, cfg);
@@ -104,18 +108,21 @@ namespace ys {
                 stageHalfH = stageH >> 1;
                 console.log('scale', scale);
                 stage.scale.set(scale);
-                canvas.style.position = 'absolute';
-                canvas.style.top = '0px';
-                canvas.style.left = '0px';
+                // canvas.style.position = 'absolute';
+                // canvas.style.top = '0px';
+                // canvas.style.left = '0px';
                 stageScale = scale;
+
+                console.log(stageW,stageH)
+
             }
-            if (window) {
-                window.addEventListener('resize', () => {
-                    cfg.canvasWidth = innerWidth;
-                    cfg.canvasHeight = innerHeight;
-                    resize();
-                });
-            }
+            // if (window) {
+            //     window.addEventListener('resize', () => {
+            //         cfg.canvasWidth = innerWidth;
+            //         cfg.canvasHeight = innerHeight;
+            //         resize();
+            //     });
+            // }
             resize();
         }
 

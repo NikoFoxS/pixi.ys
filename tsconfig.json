@@ -10,7 +10,7 @@
         // "sourceMap": true,
         "declaration": false,
         //"declarationMap": true,
-        "target": "es5",
+        "target": "es6",
         "composite": false,
         "typeRoots": [
             "./typings"

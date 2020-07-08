@@ -45,7 +45,7 @@
             PIXI.Renderer.registerPlugin('prepare', PIXI.Prepare);
             PIXI.Loader.registerPlugin(PIXI.SpritesheetLoader);
             let canvas = document.getElementById('game');
-            var app = new Main(canvas);
+            var app = new Main(canvas,innerWidth,innerHeight,devicePixelRatio);
         }
     </script>
 </body>
