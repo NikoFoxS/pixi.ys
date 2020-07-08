@@ -1,86 +1,63 @@
 namespace ys {
 
-    // class Sound {
-    //     get paused() {
-    //         return this.ctx?.paused
-    //     }
-    //     private ctx: any;
-    //     constructor(src, { volume = 1, loop = false, autoplay }) {
-    //         const wx = (<any>window).wx;
-    //         this.ctx = wx.createInnerAudioContext()
-    //         this.ctx.src = src
-    //         this.ctx.loop = loop
-    //         this.ctx.volume = volume
-    //         this.ctx.autoplay = autoplay
-
-    //         !loop && this.ctx.onEnded(() => this.destroy())
-    //         this.ctx.onError(() => this.destroy())
-    //     }
-
-    //     play() {
-    //         this.ctx?.play()
-    //     }
-
-    //     stop() {
-    //         this.ctx?.stop()
-    //     }
-
-    //     pause() {
-    //         this.ctx?.pause()
-    //     }
-
-    //     destroy() {
-    //         if (!this.ctx) return
-    //         this.ctx.destroy()
-    //         this.ctx = null
-    //     }
-    // }
-
-    // export function load(src, opt = { autoplay: false }) {
-    //     const sound = new Sound(src, opt)
-    //     return sound
-    // }
-
-    // export function play(src, opt = { autoplay: true }) {
-    //     const sound = new Sound(src, opt)
-    //     return sound
-    // }
-
+    const wx = (<any>window).wx;
     export interface ISound {
-        play(start: number,loop: boolean):void;
-        pause():void;
-        resume():void;
-        stop():void;
+        play(start: number, loop: boolean): void;
+        pause(): void;
+        resume(): void;
+        stop(): void;
+        destroy(): void;
     }
 
-    export class SoundX implements ISound
-    {
-        constructor(audio:any)
-        {
+    export class SoundX implements ISound {
+        constructor(src: string) {
+            if (wx) {
+                this.audio = wx.createInnerAudioContext();
+                this.audio.src = src
+                this.audio.autoplay = false
+            }
 
         }
-        play(start: number,loop: boolean):void
-        {
+        private audio: any;
+        play(start: number = 0, loop: boolean = true): void {
 
+            if (this.audio) {
+                this.audio.startTime = start;
+                this.audio.autoplay = true;
+                this.audio.loop = loop;
+                this.audio.play();
+
+                wx.onShow(function () {
+                    this.audio?.play();
+                });
+
+                wx.onAudioInterruptionEnd(function () {
+                    this.audio?.play();
+                })
+            }
         }
 
-        pause():void
-        {
-
+        pause(): void {
+            this.audio?.pause();
         }
 
-        resume():void
-        {
-
+        resume(): void {
+            this.audio?.play();
         }
 
-        stop():void
-        {
-
+        stop(): void {
+            this.audio?.stop();
         }
+
+        destroy(): void {
+            this.pause();
+            this.audio?.destroy();
+            this.audio = null;
+        }
+
     }
 
-    export class Sound implements ISound{
+    export class Sound implements ISound {
         constructor(audio: HTMLAudioElement) {
             this.audio = audio;
             audio.addEventListener("ended", this.onPlayEnd.bind(this));
@@ -106,13 +83,18 @@ namespace ys {
             if (!this.audio)
                 return;
             const a = this.audio;
-            this.audio = null;
             //延迟一定时间再停止，规避chrome报错
             setTimeout(() => {
                 a.removeEventListener("ended", this.onPlayEnd);
                 a.pause();
             }, 200);
         }
+
+        destroy(): void {
+            this.stop();
+            this.audio = null;
+        }
+
         private startTime: number;
         private _play() {
             if (this.audio) {
