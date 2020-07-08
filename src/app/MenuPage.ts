@@ -83,7 +83,7 @@ class MenuPageMediator extends ys.Mediator {
 
     public onInit() {
         console.log(this, 'init');
-        this.registerCommand(StartCMD);
+        // this.registerCommand(StartCMD);
 
         var v = this.getView() as MenuPage;
         v.bg.interactive = true;
