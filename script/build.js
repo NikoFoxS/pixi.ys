@@ -19,7 +19,8 @@ try {
     if(type == 'wx')
     {
         console.log("to wxgame...");
-        let doc = fsExtra.readFileSync(path+'/index.js','utf-8');
+        let doc = '';
+        doc = fsExtra.readFileSync(path+'/index.js','utf-8');
         
         doc += `
         window.Main=Main;
@@ -29,6 +30,7 @@ try {
         window.RES=RES;
         window.WEB=WEB;
         window.app=app;
+        ys.wxgame = true;
 
         PIXI.Renderer.registerPlugin('accessibility', PIXI.AccessibilityManager);
             PIXI.Renderer.registerPlugin('batch', PIXI.BatchRenderer);
@@ -37,16 +39,23 @@ try {
             PIXI.Renderer.registerPlugin('particle', PIXI.ParticleRenderer);
             PIXI.Renderer.registerPlugin('prepare', PIXI.Prepare);
             PIXI.Loader.registerPlugin(PIXI.SpritesheetLoader);
+        console.log('构建时间:',new Date().toString())
         `
         fsExtra.writeFileSync('wxgame/js/index.js',doc);
-        doc = fsExtra.readFileSync('js/pixi.js','utf-8');
-        fsExtra.writeFileSync('wxgame/js/pixi.js',doc);
+
+        doc = fsExtra.readFileSync('js/pixi.min.js','utf-8');
+        doc = doc.replace(/this\.PIXI/ig,'window.PIXI');
+        fsExtra.writeFileSync('wxgame/js/pixi.min.js',doc);
+        // cp.execSync(`uglifyjs js/pixi.js -m -c -o wxgame/js/pixi.js`, {
+        //     stdio: "inherit"
+        // }); 
+        
     }else if(type == 'release')
     {
         console.log("to release...");
-        cp.execSync(`uglifyjs js/pixi.js dist/index.js -m -c -o ${release}/index.js`, {
-            stdio: "inherit"
-        });
+        // cp.execSync(`uglifyjs js/pixi.js dist/index.js -m -c -o ${release}/index.js`, {
+        //     stdio: "inherit"
+        // });
     }
 
     console.log("\x1b[35m***BUILD COMPLETE***\x1b[0m");

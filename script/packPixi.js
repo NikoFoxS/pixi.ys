@@ -73,5 +73,5 @@ console.log("清理...");
 fs.emptyDirSync("js");
 
 bundler(pixijs, 'js/pixi.js', () => {
-    // bundler(piximinijs, 'js/pixi.min.js');
+    bundler(piximinijs, 'js/pixi.min.js');
 });
