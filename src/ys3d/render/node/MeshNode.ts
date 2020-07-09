@@ -1,5 +1,3 @@
-/// <reference path="./RenderNode.ts" />
-
 namespace ys3d {
 
 
