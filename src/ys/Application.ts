@@ -10,7 +10,9 @@ let stageW: number, stageH: number, stageHalfW: number, stageHalfH: number;
 
 namespace ys {
 
-    export const stage:PIXI.Container = new PIXI.Container();
+    export const stage: PIXI.Container = new PIXI.Container();
+    export let renderer: PIXI.Renderer;
+    export let wxgame: boolean=false;
 
     export interface ILoadGroupReport {
         onGroupStart(groupName: string): void;
@@ -22,12 +24,11 @@ namespace ys {
     export let tikcer: PIXI.Ticker;
     export class Application implements ys.ILoadGroupReport {
         constructor(canvas: HTMLCanvasElement, cfg: Config) {
-            console.log('PIXI::',PIXI);
-            PIXI.utils.skipHello();
+            console.log('PIXI::', PIXI);
+            // PIXI.utils.skipHello();
 
-            //自动显示VConsole
-            // const VConsole = (<any>window).VConsole;
-            // VConsole && new VConsole()
+            const ticker = PIXI.Ticker.shared;
+            ys.tikcer = ticker;
 
             var renderer = new PIXI.Renderer({
                 view: canvas,
@@ -36,39 +37,41 @@ namespace ys {
                 antialias: cfg.antialias,
                 backgroundColor: cfg.backgroundColor
             });
-
+            ys.renderer = renderer;
             ys.canvas = renderer.view;
 
+            //自动显示VConsole
+            if (!ys.wxgame) {
+                const VConsole = (<any>window).VConsole;
+                VConsole && new VConsole();
+
+                document.body.addEventListener('focusout', () => {
+                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                })
+
+                const Stats = (<any>window).Stats;
+                if (Stats) {
+                    var stats = new Stats();
+                    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.body.appendChild(stats.dom);
+                    ticker.add(() => {
+                        stats.begin();
+                        renderer.render(stage);
+                        stats.end();
+                    }, PIXI.UPDATE_PRIORITY.LOW);
+                } else {
+                    ticker.add(() => {
+                        renderer.render(stage);
+                    }, PIXI.UPDATE_PRIORITY.LOW);
+                }
+            } else {
+                ticker.add(() => {
+                    renderer.render(stage);
+                }, PIXI.UPDATE_PRIORITY.LOW);
+            }
+            ticker.start();
             var stage = ys.stage;
             RES.setup(cfg);
-
-            const ticker = PIXI.Ticker.shared;
-            ys.tikcer = ticker;
-
-            // document.body.addEventListener('focusout', () => {
-            //     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-            // })
-
-            // const Stats = (<any>window).Stats;
-            // if (Stats) {
-            //     var stats = new Stats();
-            //     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-            //     document.body.appendChild(stats.dom);
-            //     ticker.add(() => {
-            //         stats.begin();
-            //         renderer.render(stage);
-            //         stats.end();
-            //     }, PIXI.UPDATE_PRIORITY.LOW);
-            // } else {
-            //     ticker.add(() => {
-            //         renderer.render(stage);
-            //     }, PIXI.UPDATE_PRIORITY.LOW);
-            // }
-            console.log('>>',ticker,stage)
-            ticker.add(() => {
-                renderer.render(stage);
-            }, PIXI.UPDATE_PRIORITY.LOW);
-            ticker.start();
 
             this.resize(canvas, stage, cfg);
             this.loadGroup(cfg);
@@ -108,21 +111,24 @@ namespace ys {
                 stageHalfH = stageH >> 1;
                 console.log('scale', scale);
                 stage.scale.set(scale);
-                // canvas.style.position = 'absolute';
-                // canvas.style.top = '0px';
-                // canvas.style.left = '0px';
+                if (!ys.wxgame) {
+                    canvas.style.position = 'absolute';
+                    canvas.style.top = '0px';
+                    canvas.style.left = '0px';
+                }
                 stageScale = scale;
 
-                console.log(stageW,stageH)
-
             }
-            // if (window) {
-            //     window.addEventListener('resize', () => {
-            //         cfg.canvasWidth = innerWidth;
-            //         cfg.canvasHeight = innerHeight;
-            //         resize();
-            //     });
-            // }
+            if (!ys.wxgame) {
+                if (window) {
+                    window.addEventListener('resize', () => {
+                        cfg.canvasWidth = innerWidth;
+                        cfg.canvasHeight = innerHeight;
+                        resize();
+                    });
+                }
+            }
+
             resize();
         }
 
