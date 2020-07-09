@@ -1,6 +1,6 @@
 import './js/libs/weapp-adapter/index.js'
 import './js/libs/symbol'
-import './js/pixi.js';
+import './js/pixi.min.js';
 import './js/index.js'
 
 try {
