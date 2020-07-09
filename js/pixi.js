@@ -14382,15 +14382,9 @@ var _pixi_core = (function (exports, settings, constants, utils, runner, ticker,
             if (this.currentRenderer === objectRenderer) {
                 return;
             }
-            console.log('this.currentRenderer::',this.currentRenderer)
             this.currentRenderer.stop();
             this.currentRenderer = objectRenderer;
-            console.log('objectRenderer::',objectRenderer)
-            if(this.currentRenderer)
-            {
-                this.currentRenderer.start();
-            }
-            
+            this.currentRenderer.start();
         };
         /**
          * This should be called if you wish to do some custom rendering
