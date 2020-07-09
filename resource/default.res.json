@@ -1,7 +1,7 @@
 {
 	"groups":[
 		{
-			"keys":"headimg_jpg,test_json,mc_jpg,bgm_mp3",
+			"keys":"headimg_jpg,bgm_mp3",
 			"name":"preload"
 		},
 		{
@@ -14,16 +14,6 @@
 			"name":"headimg_jpg",
 			"type":"image",
 			"url":"headimg.jpg"
-		},
-		{
-			"name":"test_json",
-			"type":"json",
-			"url":"test.json"
-		},
-		{
-			"name":"mc_jpg",
-			"type":"image",
-			"url":"mc.jpg"
 		},
 		{
 			"name":"bgm_mp3",
