@@ -1,0 +1,29 @@
+{
+	"groups":[
+		{
+			"keys":"headimg_jpg,test_json,mc_jpg",
+			"name":"preload"
+		},
+		{
+			"keys":"",
+			"name":"loading"
+		}
+	],
+	"resources":[
+		{
+			"name":"headimg_jpg",
+			"type":"image",
+			"url":"headimg.jpg"
+		},
+		{
+			"name":"test_json",
+			"type":"json",
+			"url":"test.json"
+		},
+		{
+			"name":"mc_jpg",
+			"type":"image",
+			"url":"mc.jpg"
+		}
+	]
+}
