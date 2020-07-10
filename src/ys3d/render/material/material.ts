@@ -1,6 +1,5 @@
 namespace ys3d {
     const vertexSrc = `
-precision mediump float;
 attribute vec3 aVertexPosition;
 attribute vec2 aUvs;
 uniform mat4 mvpMatrix;
