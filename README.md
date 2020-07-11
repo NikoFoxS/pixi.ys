@@ -3,13 +3,13 @@
 ## 封装功能
 - [x] 基于typescript
 - [x] 自定义打包pixijs的
-- [x] 使用白鹭引擎的 Res Depot进行资源管理
+- [x] 使用白鹭引擎的 Res Depot进行资源管理，修正PIXI.Loader使其能正确加载音频文件。
 - [x] 使用TexturePacker进行Sprtiesheet处理
 - [x] 屏幕适配。固定高和固定宽（固定宽最常用）      
 - [x] 简易的pureMVC框架（做大型一点的项目需要用到）
 - [x] Ajax
 - [x] TextFiled添加中日韩文字的自动换行
 - [x] TextFiledInput单行输入文本 
-- [x] 音频播放功能
+- [x] 音频播放功能（audio，webaudio，及微信小游戏）
 - [x] 简易3D库
 
