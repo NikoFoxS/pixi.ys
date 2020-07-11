@@ -12,7 +12,7 @@ namespace ys {
 
     export const stage: PIXI.Container = new PIXI.Container();
     export let renderer: PIXI.Renderer;
-    export let wxgame: boolean=false;
+    export let wxgame: boolean = false;
 
     export interface ILoadGroupReport {
         onGroupStart(groupName: string): void;
@@ -70,11 +70,13 @@ namespace ys {
                 }, PIXI.UPDATE_PRIORITY.LOW);
             }
             ticker.start();
+
             var stage = ys.stage;
             RES.setup(cfg);
 
             this.resize(canvas, stage, cfg);
             this.loadGroup(cfg);
+
         }
 
         private loadGroup(cfg: Config) {

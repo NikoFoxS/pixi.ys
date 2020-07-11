@@ -15,7 +15,7 @@ class Main extends ys.Application{
         cfg.proxy = []; //添加数据代理
         cfg.command = [] //添加通知指令
         cfg.mockAjax = false;
-        cfg.backgroundColor = 0xff0000;
+        cfg.backgroundColor = 0x000000;
         cfg.pixelRatio = pixelRatio;
         cfg.antialias = true;
         cfg.screenAdapter = null;
