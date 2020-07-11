@@ -30,40 +30,28 @@ namespace ys3d {
 			// generate vertices, normals and uvs
 
 			for (iy = 0; iy < gridY1; iy++) {
-
 				var y = iy * segment_height - height_half;
-
 				for (ix = 0; ix < gridX1; ix++) {
-
 					var x = ix * segment_width - width_half;
-
 					vertices.push(x, - y, 0);
 					uvs.push(ix / gridX);
 					uvs.push(1 - (iy / gridY));
-
 				}
-
 			}
 
 			// indices
-
 			for (iy = 0; iy < gridY; iy++) {
-
 				for (ix = 0; ix < gridX; ix++) {
-
 					var a = ix + gridX1 * iy;
 					var b = ix + gridX1 * (iy + 1);
 					var c = (ix + 1) + gridX1 * (iy + 1);
 					var d = (ix + 1) + gridX1 * iy;
-
 					// faces
 					//a,b
 					//d,c
 					indices.push(a, b, d);
 					indices.push(b, c, d);
-
 				}
-
 			}
 
 			this._vertices = vertices;

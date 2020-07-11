@@ -29,94 +29,7 @@ namespace app {
             const cam = new ys3d.Camera(70, stageW / stageH, 1, 20000);
             cam.lookAt(0, 0, -1);
 
-            // (async () => {
-
-            //     function parseOBJ(text) {
-            //         // because indices are base 1 let's just fill in the 0th data
-            //         const objPositions = [[0, 0, 0]];
-            //         const objTexcoords = [[0, 0]];
-            //         const objNormals = [[0, 0, 0]];
-
-            //         // same order as `f` indices
-            //         const objVertexData = [
-            //             objPositions,
-            //             objTexcoords,
-            //             objNormals,
-            //         ];
-
-            //         // same order as `f` indices
-            //         let webglVertexData = [
-            //             [],   // positions
-            //             [],   // texcoords
-            //             [],   // normals
-            //         ];
-
-            //         function addVertex(vert) {
-            //             const ptn = vert.split('/');
-            //             ptn.forEach((objIndexStr, i) => {
-            //                 if (!objIndexStr) {
-            //                     return;
-            //                 }
-            //                 const objIndex = parseInt(objIndexStr);
-            //                 const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
-            //                 webglVertexData[i].push(...objVertexData[i][index]);
-            //             });
-            //         }
-
-            //         const keywords = {
-            //             v(parts) {
-            //                 objPositions.push(parts.map(parseFloat));
-            //             },
-            //             vn(parts) {
-            //                 objNormals.push(parts.map(parseFloat));
-            //             },
-            //             vt(parts) {
-            //                 // should check for missing v and extra w?
-            //                 objTexcoords.push(parts.map(parseFloat));
-            //             },
-            //             f(parts) {
-            //                 const numTriangles = parts.length - 2;
-            //                 for (let tri = 0; tri < numTriangles; ++tri) {
-            //                     addVertex(parts[0]);
-            //                     addVertex(parts[tri + 1]);
-            //                     addVertex(parts[tri + 2]);
-            //                 }
-            //             },
-            //         };
-
-            //         const keywordRE = /(\w*)(?: )*(.*)/;
-            //         const lines = text.split('\n');
-            //         for (let lineNo = 0; lineNo < lines.length; ++lineNo) {
-            //             const line = lines[lineNo].trim();
-            //             if (line === '' || line.startsWith('#')) {
-            //                 continue;
-            //             }
-            //             const m = keywordRE.exec(line);
-            //             if (!m) {
-            //                 continue;
-            //             }
-            //             const [, keyword, unparsedArgs] = m;
-            //             const parts = line.split(/\s+/).slice(1);
-            //             const handler = keywords[keyword];
-            //             if (!handler) {
-            //                 console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
-            //                 continue;
-            //             }
-            //             handler(parts, unparsedArgs);
-            //         }
-
-            //         return {
-            //             position: webglVertexData[0],
-            //             texcoord: webglVertexData[1],
-            //             normal: webglVertexData[2],
-            //         };
-            //     }
-
-            //     const response = await fetch('https://webglfundamentals.org/webgl/resources/models/cube/cube.obj');
-            //     const text = await response.text();
-            //     const data = parseOBJ(text);
-            // })();
-
+           
             const scene = new ys3d.Scene(stageW, stageH);
             // const geo = new ys3d.PIXIGeometry(new ys3d.PlaneGeometry(128, 256));
 
@@ -171,13 +84,41 @@ namespace app {
             GG.layoutBottom(btn, 100);
             btn.interactive = true;
 
-            var s = new ys.Sound(RES.getRes('bgm_mp3'));
-            var play = false;
+            // var s = new ys.Sound(RES.getRes('bgm_mp3'));
+            // var play = false;
 
             btn.on('pointertap', () => {
-                play = !play;
-                play ? (s.play()):(s.stop())
-                console.log(play);
+                // play = !play;
+                // play ? (s.play()):(s.stop())
+                // console.log(play);
+
+                scene.removeChild(box);
+                GG.removeDisplayObject(box.display);
+
+                var {position,texcoord,normal} = ys3d.parseOBJ(RES.getRes('weapon_obj'));
+                console.log(position,texcoord,normal);
+
+                var geo = new PIXI.Geometry();
+                position = position.map((val,index)=>{
+                    return val/20;
+                })
+                // var bt = new PIXI.BaseTexture();
+                var tex = RES.getRes('weapon_png') as PIXI.Texture;
+                var mat = new ys3d.Material(tex)
+                geo.addAttribute('aVertexPosition',position,3);
+                geo.addAttribute('aUvs',texcoord,2);
+                var mesh = new ys3d.MeshNode(geo,mat);
+                mesh.position.z = -200;
+                // mesh.scale.set(10,10,10);
+                scene.addChild(mesh);
+                this.addChild(mesh.display);
+                // mesh.rotation.y = -30;
+                // mesh.position.y = -2;
+
+                ys.tikcer.add(()=>{
+                    mesh.rotation.y += 1;
+                    mesh.rotation.z += 1;
+                })
                 
             }, this);
         }
