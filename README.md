@@ -11,5 +11,5 @@
 - [x] TextFiled添加中日韩文字的自动换行
 - [x] TextFiledInput单行输入文本 
 - [x] 音频播放功能（audio，webaudio，及微信小游戏）
-- [x] 简易3D库
+- [x] 简易3D库：3D及2D内容可混排。
 
