@@ -12,4 +12,5 @@
 - [x] TextFiledInput单行输入文本 
 - [x] 音频播放功能（audio，webaudio，及微信小游戏）
 - [x] 简易3D库：3D及2D内容可混排。
+- [x] 支持发布微信小游戏。
 
