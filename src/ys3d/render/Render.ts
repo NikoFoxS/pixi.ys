@@ -16,7 +16,7 @@ module ys3d {
 
 			const renderList:any = [];
 			//寻找渲染对象
-			scene.traverse((child:ys3d.MeshNode) => {
+			scene.traverse((child:ys3d.Mesh3D) => {
 				//to do 剔除显示范围外的对象
 				//如果不显示，停止下一层。
 				if (!child.visible) return true;
@@ -26,7 +26,7 @@ module ys3d {
 			})
 
 			//深度排序
-			renderList.forEach((child: MeshNode) => {
+			renderList.forEach((child: Mesh3D) => {
 				let tempV4: Vector4 = child.worldPosition;
 				tempV4.x = 0;
 				tempV4.y = 0;
@@ -39,7 +39,7 @@ module ys3d {
 				child.worldPosition = tempV4;
 			})
 			//深度排序
-			renderList.sort((a: MeshNode, b: MeshNode) => {
+			renderList.sort((a: Mesh3D, b: Mesh3D) => {
 				const az = a.worldPosition.z;
 				const bz = b.worldPosition.z;
 				const alen = a.worldPosition.getLength();
@@ -58,7 +58,7 @@ module ys3d {
 
 			});
 			
-			renderList.forEach((node: MeshNode, index:number) => {
+			renderList.forEach((node: Mesh3D, index:number) => {
 				const pos = node.worldPosition;
 				node.draw(scene, cam);
 			})

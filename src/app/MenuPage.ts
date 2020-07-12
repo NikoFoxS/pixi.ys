@@ -29,36 +29,12 @@ namespace app {
             const cam = new ys3d.Camera(70, stageW / stageH, 1, 20000);
             cam.lookAt(0, 0, -1);
 
-           
+
             const scene = new ys3d.Scene(stageW, stageH);
             // const geo = new ys3d.PIXIGeometry(new ys3d.PlaneGeometry(128, 256));
 
-            const map = PIXI.Texture.from('resource/headimg.jpg');
-            const geoBox = new ys3d.PIXIGeometry(new ys3d.BoxGeometry(100, 100, 100));
-            const mat = new ys3d.Material(map);
-
-            const box = new ys3d.MeshNode(geoBox, mat);
-            layer.addChild(box.display);
-            scene.addChild(box);
-            box.position.z = - 200;
-
-            let i = 0;
-            while (i--) {
-                const mat = new ys3d.Material(map);
-                const box = new ys3d.MeshNode(geoBox, mat);
-                layer.addChild(box.display);
-                scene.addChild(box);
-                box.position.z = - 1000 - Math.random() * 2000;
-                box.position.x = -700 + Math.random() * 1400
-                box.position.y = -700 + Math.random() * 1400
-                ys.tikcer.add(() => {
-                    box.rotation.y += 1;
-                })
-            }
 
             ys.tikcer.add(() => {
-                box.rotation.y += 2;
-                box.rotation.z += 1;
                 render.render(scene, cam);
             })
 
@@ -92,35 +68,38 @@ namespace app {
                 // play ? (s.play()):(s.stop())
                 // console.log(play);
 
-                scene.removeChild(box);
-                GG.removeDisplayObject(box.display);
+                // RES.getResByUrl('https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj', (res) => {
+                // console.log(res);
 
-                var {position,texcoord,normal} = ys3d.parseOBJ(RES.getRes('weapon_obj'));
-                console.log(position,texcoord,normal);
-
-                var geo = new PIXI.Geometry();
-                position = position.map((val,index)=>{
-                    return val/20;
-                })
-                // var bt = new PIXI.BaseTexture();
                 var tex = RES.getRes('weapon_png') as PIXI.Texture;
-                var mat = new ys3d.Material(tex)
-                geo.addAttribute('aVertexPosition',position,3);
-                geo.addAttribute('aUvs',texcoord,2);
-                var mesh = new ys3d.MeshNode(geo,mat);
-                mesh.position.z = -200;
-                // mesh.scale.set(10,10,10);
-                scene.addChild(mesh);
-                this.addChild(mesh.display);
-                // mesh.rotation.y = -30;
-                // mesh.position.y = -2;
+                let geo: ys3d.ObjGeometry = new ys3d.ObjGeometry(null, 100);
 
-                ys.tikcer.add(()=>{
+                geo.parseData(RES.getRes('knife_sharp_obj'),RES.getRes('knife_sharp_mtl'))
+
+                return;
+                // const buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs, geo.indices);
+                // const info = geometries[0].data;
+                // info.position = info.position.map(val => { return val * 100 })
+                // const buffer = new ys3d.ColorVertexBuffer(info.position, info.color)
+                // const shader = new ys3d.TexureShader(tex);
+                const shader = new ys3d.ColorShader();
+                let mesh = new ys3d.Mesh3D(null, shader, ys3d.SIDE.DOUBLE);
+
+
+                this.addChild(mesh.display);
+                scene.addChild(mesh);
+                mesh.position.z = - 100;
+
+                ys.tikcer.add(() => {
                     mesh.rotation.y += 1;
-                    mesh.rotation.z += 1;
+                    // mesh.rotation.z += 1;
                 })
-                
-            }, this);
+            }, this)
+
+
+
+
+            // }, this);
         }
 
     }
