@@ -1,19 +1,29 @@
 namespace ys3d {
+  export class ObjOption {
+    public scale: number = 1;
+    public uvFlipX: boolean = false;
+    public uvFlipY: boolean = false;
+  }
   export class ObjGeometry extends Geometry {
-    constructor(objTxt: string, scale: number = 1, mtlTxt?: string) {
+    constructor(objTxt: string, option?:ObjOption, mtlTxt?: string) {
       super();
 
-      const info = this.parseData(objTxt, scale, mtlTxt);
+      const info = this.parseData(objTxt,option, mtlTxt);
       this._colors = info.colors;
       this._uvs = info.uvs;
       this._vertices = info.vertices;
     }
 
-    private parseData(objTxt: string, scale: number = 1, mtlTxt?: string) {
+    private parseData(objTxt: string, option?:ObjOption, mtlTxt?: string) {
       const vertices: number[] = [];
       const uvs: number[] = [];
       const colors: number[] = [];
       const indices: number[] = [];
+
+      if(!option)
+      {
+        option = new ObjOption();
+      }
 
       //清除前后空格
       objTxt = objTxt.trim();
@@ -33,14 +43,21 @@ namespace ys3d {
       let v: string[] = matchLines(/v [\s\S]*?\n/g, objTxt);
       let vArr: number[][] = v.map(val => {
         val = val.trim();
-        return val.slice(2).split(' ').map(parseFloat).map(v => { return v * scale });
+        return val.slice(2).split(' ').map(parseFloat).map(v => { return v * option.scale });
       })
 
       //取出uv
       let vt: string[] = matchLines(/vt [\s\S]*?\n/g, objTxt);
       let vtArr: number[][] = vt.map(val => {
         val = val.trim();
-        return val.slice(3).split(' ').map(parseFloat);
+        const uv = val.slice(3).split(' ').map(parseFloat);
+        if (option.uvFlipX) {
+          uv[0] = 1 - uv[0];
+        }
+        if (option.uvFlipY) {
+          uv[1] = 1 - uv[1];
+        }
+        return uv;
       })
 
       //取出面和mtl
@@ -59,7 +76,6 @@ namespace ys3d {
           kdMap[key] = value;
         }
       }
-
 
       let index = 0;//索引
       function addVertex(vert: string, color: number[]) {
