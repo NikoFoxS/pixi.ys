@@ -63,6 +63,12 @@ namespace app {
             // var s = new ys.Sound(RES.getRes('bgm_mp3'));
             // var play = false;
 
+            var g = new ys3d.Group();
+                scene.addChild(g);
+                ys.tikcer.add(() => {
+                    g.rotation.y += 1;
+                })
+
             btn.on('pointertap', () => {
                 // play = !play;
                 // play ? (s.play()):(s.stop())
@@ -72,27 +78,25 @@ namespace app {
                 // console.log(res);
 
                 var tex = RES.getRes('weapon_png') as PIXI.Texture;
-                let geo: ys3d.ObjGeometry = new ys3d.ObjGeometry(null, 100);
 
-                geo.parseData(RES.getRes('knife_sharp_obj'),RES.getRes('knife_sharp_mtl'))
+                var geo = new ys3d.ObjGeometry(RES.getRes('sniper_obj'),3000,RES.getRes('sniper_mtl'))
+                // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),0.05)
 
-                return;
-                // const buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs, geo.indices);
-                // const info = geometries[0].data;
-                // info.position = info.position.map(val => { return val * 100 })
-                // const buffer = new ys3d.ColorVertexBuffer(info.position, info.color)
-                // const shader = new ys3d.TexureShader(tex);
-                const shader = new ys3d.ColorShader();
-                let mesh = new ys3d.Mesh3D(null, shader, ys3d.SIDE.DOUBLE);
-
+                // var buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs);
+                var buffer = new ys3d.ColorVertexBuffer(geo.vertices, geo.colors)
+                // var shader = new ys3d.TexureShader(tex);
+                var shader = new ys3d.ColorShader();
+                let mesh = new ys3d.Mesh3D(buffer, shader);
 
                 this.addChild(mesh.display);
-                scene.addChild(mesh);
-                mesh.position.z = - 100;
+                // scene.addChild(mesh);
+                mesh.position.z = - 400;
+                mesh.position.y = -100;
+
+                g.addChild(mesh);
 
                 ys.tikcer.add(() => {
                     mesh.rotation.y += 1;
-                    // mesh.rotation.z += 1;
                 })
             }, this)
 
