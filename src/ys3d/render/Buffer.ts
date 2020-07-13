@@ -5,7 +5,7 @@ namespace ys3d {
             super();
             this.addAttribute('aVertexPosition', vertices, 3);
             this.addAttribute('aUvs', uvs, 2);
-            if (indices) {
+            if (indices && indices.length) {
                 this.addIndex(indices)
             }
             this.interleave();
@@ -17,7 +17,7 @@ namespace ys3d {
             super();
             this.addAttribute('aVertexPosition', vertices, 3);
             this.addAttribute('aColor', colors, 3);
-            if (indices) {
+            if (indices && indices.length) {
                 this.addIndex(indices)
             }
             this.interleave();

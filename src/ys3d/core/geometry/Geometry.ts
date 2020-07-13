@@ -16,6 +16,8 @@ namespace ys3d {
 		//顶点颜色
 		protected _colors: number[];
 
+		//法线暂时不处理?
+
 		public get vertices() {
 			return this._vertices.slice();
 		}

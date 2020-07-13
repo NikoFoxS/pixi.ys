@@ -1,113 +1,104 @@
 namespace ys3d {
-    export class ObjGeometry extends Geometry {
-        constructor(objectData: string,scale:number=1) {
-            super();
+  export class ObjGeometry extends Geometry {
+    constructor(objTxt: string, scale: number = 1, mtlTxt?: string) {
+      super();
 
-            const {vertices,textures,indices,vertexNormals} = this.parse(objectData);
-            this._vertices = vertices;
-            this._vertices = this._vertices.map((val)=>{ return val*scale});
-            this._uvs = textures;
-            this._indices = indices;
-        }
-        //https://github.com/YuqinShao/WebGL-Obj-Loader/blob/master/webgl-obj-loader.js
-        private parse(objectData: string){
-            /*
-                With the given elementID or string of the OBJ, this parses the
-                OBJ and creates the mesh.
-            */
-
-            const verts = [];
-            const vertNormals = [];
-            const textures = [];
-
-            // unpacking stuff
-            let packed: any = {};
-            packed.verts = [];
-            packed.norms = [];
-            packed.textures = [];
-            packed.hashindices = {};
-            packed.indices = [];
-            packed.index = 0;
-
-            // array of lines separated by the newline
-            let lines: any[] = objectData.split('\n');
-            let line:any;
-            for (var i = 0; i < lines.length; i++) {
-                // if this is a vertex
-                if (lines[i].startsWith('v ')) {
-                    line = lines[i].slice(2).split(" ")
-                    verts.push(line[0]);
-                    verts.push(line[1]);
-                    verts.push(line[2]);
-                }
-                // if this is a vertex normal
-                else if (lines[i].startsWith('vn')) {
-                    line = lines[i].slice(3).split(" ")
-                    vertNormals.push(line[0]);
-                    vertNormals.push(line[1]);
-                    vertNormals.push(line[2]);
-                }
-                // if this is a texture
-                else if (lines[i].startsWith('vt')) {
-                    line = lines[i].slice(3).split(" ")
-                    textures.push(line[0]);
-                    textures.push(line[1]);
-                }
-                // if this is a face
-                else if (lines[i].startsWith('f ')) {
-                    line = lines[i].slice(2).split(" ");
-                    var quad = false;
-                    for (var j = 0; j < line.length; j++) {
-                        // Triangulating quads
-                        // quad: 'f v0/t0/vn0 v1/t1/vn1 v2/t2/vn2 v3/t3/vn3/'
-                        // corresponding triangles:
-                        //      'f v0/t0/vn0 v1/t1/vn1 v2/t2/vn2'
-                        //      'f v2/t2/vn2 v3/t3/vn3 v0/t0/vn0'
-                        if (j == 3 && !quad) {
-                            // add v2/t2/vn2 in again before continuing to 3
-                            j = 2;
-                            quad = true;
-                        }
-
-                        if (line[j] in packed.hashindices) {
-                            packed.indices.push(packed.hashindices[line[j]]);
-                        }
-                        else {
-                            var face = line[j].split('/');
-                            // vertex position
-                            packed.verts.push(verts[(face[0] - 1) * 3 + 0]);
-                            packed.verts.push(verts[(face[0] - 1) * 3 + 1]);
-                            packed.verts.push(verts[(face[0] - 1) * 3 + 2]);
-                            // vertex textures
-                            packed.textures.push(textures[(face[1] - 1) * 2 + 0]);
-                            packed.textures.push(textures[(face[1] - 1) * 2 + 1]);
-                            // vertex normals
-                            packed.norms.push(vertNormals[(face[2] - 1) * 3 + 0]);
-                            packed.norms.push(vertNormals[(face[2] - 1) * 3 + 1]);
-                            packed.norms.push(vertNormals[(face[2] - 1) * 3 + 2]);
-                            // add the newly created vertex to the list of indices
-                            packed.hashindices[line[j]] = packed.index;
-                            packed.indices.push(packed.index);
-                            // increment the counter
-                            packed.index += 1;
-                        }
-
-                        if (j == 3 && quad) {
-                            // add v0/t0/vn0 onto the second triangle
-                            packed.indices.push(packed.hashindices[line[0]]);
-                        }
-                    }
-                }
-            }
-            packed.verts = packed.verts.map(parseFloat)
-            packed.norms = packed.norms.map(parseFloat)
-            packed.textures = packed.textures.map(parseFloat)
-            return {
-                vertices: packed.verts,
-                vertexNormals: packed.norms,
-                textures: packed.textures,
-                indices: packed.indices
-            }
-        }
+      const info = this.parseData(objTxt, scale, mtlTxt);
+      this._colors = info.colors;
+      this._uvs = info.uvs;
+      this._vertices = info.vertices;
     }
+
+    private parseData(objTxt: string, scale: number = 1, mtlTxt?: string) {
+      const vertices: number[] = [];
+      const uvs: number[] = [];
+      const colors: number[] = [];
+      const indices: number[] = [];
+
+      //清除前后空格
+      objTxt = objTxt.trim();
+
+
+      var matchLines = (reg, txt) => {
+        //正则出数据
+        let arr = txt.match(reg);
+        if (arr) {
+          //删除换行符
+          arr = arr.map(val => { return val.replace(/\n/ig, '') });
+        }
+        return arr;
+      }
+
+      //取出顶点
+      let v: string[] = matchLines(/v [\s\S]*?\n/g, objTxt);
+      let vArr: number[][] = v.map(val => {
+        val = val.trim();
+        return val.slice(2).split(' ').map(parseFloat).map(v => { return v * scale });
+      })
+
+      //取出uv
+      let vt: string[] = matchLines(/vt [\s\S]*?\n/g, objTxt);
+      let vtArr: number[][] = vt.map(val => {
+        val = val.trim();
+        return val.slice(3).split(' ').map(parseFloat);
+      })
+
+      //取出面和mtl
+      let kdMap = {};
+      if (mtlTxt) {
+        mtlTxt = mtlTxt.trim();
+        let kdColor: string[] = matchLines(/(Kd |newmtl )[\s\S]*?\n/g, mtlTxt);
+
+        let key, value;
+        for (let i = 0; i < kdColor.length; i += 2) {
+          key = kdColor[i] + '';
+          value = kdColor[i + 1] + '';
+          key = key.replace('new', 'use');
+          value = value.slice(3).split(' ');
+          value = value.map(parseFloat)
+          kdMap[key] = value;
+        }
+      }
+
+
+      let index = 0;//索引
+      function addVertex(vert: string, color: number[]) {
+        const indexArr = vert.split('/');
+        //顶点位置
+        const vIndex = parseInt(indexArr[0]) - 1;
+        vertices.push(...vArr[vIndex])
+        //顶点材质
+        const vtIndex = parseInt(indexArr[1]) - 1;
+        // console.log(indexArr[1],vtIndex,isNaN(vtIndex))
+        if (!isNaN(vtIndex)) {//如果有uv数据
+          uvs.push(...vtArr[vtIndex]);
+        }
+        if (color) {
+          colors.push(...color);
+        }
+
+      }
+
+      let color: number[];//颜色
+      let face: string[];
+      let facemtl: string[] = matchLines(/(f |usemtl )[\s\S]*?\n/g, objTxt);
+      facemtl.forEach(val => {
+
+        if (kdMap[val]) { //检测mtl里面的颜色
+          color = kdMap[val];
+        } else {
+          val = val.trim();
+          face = val.slice(2).split(' ');
+          const numTriangles = face.length - 2;
+          for (let tri = 0; tri < numTriangles; ++tri) {
+            addVertex(face[0], color);
+            addVertex(face[tri + 1], color);
+            addVertex(face[tri + 2], color);
+          }
+        }
+      })
+      return { vertices, uvs, colors, indices }
+    }
+
+  }
 }

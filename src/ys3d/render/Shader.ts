@@ -24,16 +24,19 @@ attribute vec3 aVertexPosition;
 attribute vec3 aColor;
 uniform mat4 mvpMatrix;
 varying vec3 vColor;
+varying vec4 vPosition;
 void main() {
     vColor = aColor;
     gl_Position = mvpMatrix*vec4(aVertexPosition,1.);
+    vPosition = gl_Position;
 }`;
     //color fragment
     const cf = `
 precision mediump float;
 varying vec3 vColor;
+varying vec4 vPosition;
 void main() {
-    gl_FragColor = vec4(vColor,1.);
+    gl_FragColor = vec4(vColor ,1.);
 }`;
     const texProgram = PIXI.Program.from(tv, tf);
     const colProgram = PIXI.Program.from(cv, cf);
