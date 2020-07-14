@@ -1,11 +1,11 @@
 namespace ys3d {
 	export class Vector3 extends Array {
-		public constructor() {
+		public constructor(x=0,y=0,z=0) {
 			super();
 			(<any>Object)["setPrototypeOf"](this, Vector3.prototype);
-			this[0] = 0;
-			this[1] = 0;
-			this[2] = 0;
+			this[0] = x;
+			this[1] = y;
+			this[2] = z;
 		}
 
 		public set(x = 0, y = 0, z = 0) {
