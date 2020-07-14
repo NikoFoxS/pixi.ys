@@ -1,5 +1,6 @@
 namespace ys3d {
 	let ID = 0;
+	//参考threejs的数据结构
 	export class Object3D {
 		public constructor() {
 			this.position = Vector3.create();
