@@ -16,12 +16,9 @@ namespace ys3d {
             const tStart = thetaStart;
             const tLength = thetaLength;
 
-            const num = (wSegs + 1) * (hSegs + 1);
-            const numIndices = wSegs * hSegs * 6;
-
-            const position = [];//new Float32Array(num * 3);
-            const normal = [];// new Float32Array(num * 3);
-            const uv = [];//'new Float32Array(num * 2);
+            const position = [];
+            const normal = [];
+            const uv = [];
             const index = [];
 
             let i = 0;
