@@ -77,15 +77,26 @@ namespace app {
                 // RES.getResByUrl('https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj', (res) => {
                 // console.log(res);
 
-                var tex = RES.getRes('weapon_png') as PIXI.Texture;
+                var tex = RES.getRes('body_6_png') as PIXI.Texture;
+                var opt = new ys3d.ObjOption();
+                opt.scale = 5000;
+                opt.uvFlipY = true;
 
-                var geo = new ys3d.ObjGeometry(RES.getRes('sniper_obj'),3000,RES.getRes('sniper_mtl'))
+                var geo = new ys3d.ObjGeometry(RES.getRes('sniperCamo_obj'),opt,RES.getRes('sniperCamo_mtl'))
                 // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),0.05)
 
                 // var buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs);
-                var buffer = new ys3d.ColorVertexBuffer(geo.vertices, geo.colors)
+                // var buffer = new ys3d.ColorVertexBuffer(geo.vertices, geo.colors)
+
                 // var shader = new ys3d.TexureShader(tex);
-                var shader = new ys3d.ColorShader();
+                // var shader = new ys3d.ColorShader();
+                console.log(geo.vertices.length,geo.uvs.length,geo.normals.length);
+
+                // var buffer = new ys3d.TextureLightBuffer(geo.vertices,geo.uvs,geo.normals);
+                // var shader = new ys3d.TextureLightShader(tex,[0.3,1,0.1]);
+
+                var buffer = new ys3d.ColorLightBuffer(geo.vertices,geo.colors,geo.normals);
+                var shader = new ys3d.ColorLightShader([0.1,1,0],[0.3,0.3,0.3]);
                 let mesh = new ys3d.Mesh3D(buffer, shader);
 
                 this.addChild(mesh.display);
@@ -93,15 +104,12 @@ namespace app {
                 mesh.position.z = - 400;
                 mesh.position.y = -100;
 
-                g.addChild(mesh);
+                scene.addChild(mesh);
 
                 ys.tikcer.add(() => {
                     mesh.rotation.y += 1;
                 })
             }, this)
-
-
-
 
             // }, this);
         }
