@@ -60,6 +60,18 @@ namespace ys3d {
 		public get normals() {
 			return this._normals.slice();
 		}
+		/** pixi的材质坐标上下是颠倒,所以处理下 */
+		public get uvsPixi() {
+			let uvs = this.uvs;
+			uvs = uvs.map((val, index) => {
+				if (index % 2 == 1) {
+					return 1 - val;
+				} else {
+					return val;
+				}
+			})
+			return uvs;
+		}
 
 
 		private _bounds: ys3d.Bounds;
