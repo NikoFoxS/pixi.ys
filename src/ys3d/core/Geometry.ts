@@ -73,13 +73,12 @@ namespace ys3d {
 			return uvs;
 		}
 
-
 		private _bounds: ys3d.Bounds;
 		public get bounds(): ys3d.Bounds {
 			return this._bounds;
 		}
 
-		computeBoundingBox(array?: number[]) {
+		calBoundingBox(array?: number[]) {
 			if (!array) array = this.vertices;
 
 			if (!this._bounds) {
@@ -115,9 +114,9 @@ namespace ys3d {
 			center.scale(1 / 2);
 		}
 
-		computeBoundingSphere(array?: number[]) {
+		calBoundingSphere(array?: number[]) {
 			if (!array) array = this.vertices;
-			if (!this._bounds) this.computeBoundingBox(array);
+			if (!this._bounds) this.calBoundingBox(array);
 
 			let maxRadius = 0;
 			let tempVec3 = new ys3d.Vector3();
@@ -129,7 +128,7 @@ namespace ys3d {
 				maxRadius = Math.max(maxRadius, ys3d.Vector3.distance(tempVec3, this.bounds.center));
 			}
 
-			this._bounds.radius = Math.sqrt(maxRadius);
+			this._bounds.radius = maxRadius;
 		}
 	}
 }
