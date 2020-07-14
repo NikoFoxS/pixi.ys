@@ -26,7 +26,7 @@ namespace app {
             star.position.set(stageHalfW, 200);
 
             const render = new ys3d.Render();
-            const cam = new ys3d.Camera(70, stageW / stageH, 1, 20000);
+            const cam = new ys3d.Camera(80, stageW / stageH, 1, 20000);
             cam.lookAt(0, 0, -1);
 
 
@@ -77,12 +77,8 @@ namespace app {
                 // RES.getResByUrl('https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj', (res) => {
                 // console.log(res);
 
-                var tex = RES.getRes('body_6_png') as PIXI.Texture;
-                var opt = new ys3d.ObjOption();
-                opt.scale = 5000;
-                opt.uvFlipY = true;
-
-                var geo = new ys3d.ObjGeometry(RES.getRes('sniperCamo_obj'),opt,RES.getRes('sniperCamo_mtl'))
+                // var tex = RES.getRes('body_6_png') as PIXI.Texture;
+                
                 // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),0.05)
 
                 // var buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs);
@@ -90,24 +86,52 @@ namespace app {
 
                 // var shader = new ys3d.TexureShader(tex);
                 // var shader = new ys3d.ColorShader();
-                console.log(geo.vertices.length,geo.uvs.length,geo.normals.length);
+                // console.log(geo.vertices.length,geo.uvs.length,geo.normals.length);
 
                 // var buffer = new ys3d.TextureLightBuffer(geo.vertices,geo.uvs,geo.normals);
                 // var shader = new ys3d.TextureLightShader(tex,[0.3,1,0.1]);
 
-                var buffer = new ys3d.ColorLightBuffer(geo.vertices,geo.colors,geo.normals);
-                var shader = new ys3d.ColorLightShader([0.1,1,0],[0.3,0.3,0.3]);
-                let mesh = new ys3d.Mesh3D(buffer, shader);
+                // var geo2 = new ys3d.BoxGeometry(100,100,100);
+                // var buffer = new ys3d.TextureBuffer(geo2.vertices,geo2.uvs,geo2.indices);
+                // var shader = new ys3d.TexureShader(RES.getRes('headimg_jpg'));
+
+                // var geo = new ys3d.BoxGeometry(100,100,100);
+                // var geo2 = new ys3d.SphereGeometry(3000);
+
+                // var buffer = new ys3d.TextureBuffer(geo2.vertices,geo2.uvsPixi,geo2.indices);
+                // var shader = new ys3d.TexureShader(RES.getRes('pano_jpg'));
+
+                // var buffer = new ys3d.ColorLightBuffer(geo.vertices,geo.colors,geo.normals);
+                // var shader = new ys3d.ColorLightShader([0.1,1,0],[0.3,0.3,0.3]);
+                // var mat = new ys3d.TextureMaterial(RES.getRes('headimg_jpg'));
+                // var opt = new ys3d.ObjOption();
+                // opt.scale = 1/30;
+                // opt.uvFlipY = true;
+
+                var opt = new ys3d.OptionObjGeometry();
+                opt.scale = 1000;
+
+                // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),opt)
+                // var mat = new ys3d.TextureLightMaterial(RES.getRes('weapon_png'),new ys3d.Vector3(0,100,0),0xffffff);
+
+                
+                var geo = new ys3d.ObjGeometry(RES.getRes('sniperCamo_obj'),opt,RES.getRes('sniperCamo_mtl'))
+                
+                var mat = new ys3d.ColorsMaterial();
+
+                console.log(geo.vertices,geo.colors,geo.indices);
+                let mesh = new ys3d.Mesh3D(geo, mat);
 
                 this.addChild(mesh.display);
                 // scene.addChild(mesh);
-                mesh.position.z = - 400;
-                mesh.position.y = -100;
+                mesh.position.z = - 200;
+                // mesh.position.y = -100;
 
                 scene.addChild(mesh);
 
                 ys.tikcer.add(() => {
-                    mesh.rotation.y += 1;
+                    mesh.rotation.y += 0.5;
+                    // mesh.rotation.x += 0.2;
                 })
             }, this)
 
