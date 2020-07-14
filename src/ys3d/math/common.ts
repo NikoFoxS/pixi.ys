@@ -11,4 +11,8 @@ namespace ys3d {
 			return Math.sqrt(y);
 		}
 	}
+
+	export function numberToRGB(num:number) {
+		return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
+	}
 }
