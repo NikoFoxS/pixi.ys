@@ -5,23 +5,24 @@ namespace ys3d {
     public uvFlipY: boolean = false;
   }
   export class ObjGeometry extends Geometry {
-    constructor(objTxt: string, option?:ObjOption, mtlTxt?: string) {
+    constructor(objTxt: string, option?: ObjOption, mtlTxt?: string) {
       super();
 
-      const info = this.parseData(objTxt,option, mtlTxt);
+      const info = this.parseData(objTxt, option, mtlTxt);
       this._colors = info.colors;
       this._uvs = info.uvs;
       this._vertices = info.vertices;
+      this._normals = info.normals;
     }
 
-    private parseData(objTxt: string, option?:ObjOption, mtlTxt?: string) {
+    private parseData(objTxt: string, option?: ObjOption, mtlTxt?: string) {
       const vertices: number[] = [];
       const uvs: number[] = [];
       const colors: number[] = [];
       const indices: number[] = [];
+      const normals: number[] = [];
 
-      if(!option)
-      {
+      if (!option) {
         option = new ObjOption();
       }
 
@@ -46,11 +47,23 @@ namespace ys3d {
         return val.slice(2).split(' ').map(parseFloat).map(v => { return v * option.scale });
       })
 
+      let vn: string[] = matchLines(/vn [\s\S]*?\n/g, objTxt);
+      let vnArr: number[][] = vn.map(val => {
+        val = val.trim();
+        return val.slice(3).split(' ').map(parseFloat);
+      })
+
       //取出uv
       let vt: string[] = matchLines(/vt [\s\S]*?\n/g, objTxt);
       let vtArr: number[][] = vt.map(val => {
         val = val.trim();
         const uv = val.slice(3).split(' ').map(parseFloat);
+        //repeat的uv，咋弄？
+        uv[0] = Math.max(uv[0], 0);
+        uv[0] = Math.min(uv[0], 1);
+        uv[1] = Math.max(uv[1], 0);
+        uv[1] = Math.min(uv[1], 1);
+
         if (option.uvFlipX) {
           uv[0] = 1 - uv[0];
         }
@@ -85,9 +98,14 @@ namespace ys3d {
         vertices.push(...vArr[vIndex])
         //顶点材质
         const vtIndex = parseInt(indexArr[1]) - 1;
-        // console.log(indexArr[1],vtIndex,isNaN(vtIndex))
+        //法线
+        const vnIndex = parseInt(indexArr[2]) - 1;
+        //uv数据
         if (!isNaN(vtIndex)) {//如果有uv数据
           uvs.push(...vtArr[vtIndex]);
+        }
+        if (!isNaN(vnIndex)) {//如果有uv数据
+          normals.push(...vnArr[vnIndex]);
         }
         if (color) {
           colors.push(...color);
@@ -113,7 +131,7 @@ namespace ys3d {
           }
         }
       })
-      return { vertices, uvs, colors, indices }
+      return { vertices, uvs, colors, normals, indices }
     }
 
   }

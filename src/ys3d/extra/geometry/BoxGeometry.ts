@@ -1,4 +1,4 @@
-/// <reference path="Geometry.ts" />
+/// <reference path="../../core/Geometry.ts" />
 
 namespace ys3d {
 	export class BoxGeometry extends Geometry {
@@ -20,6 +20,7 @@ namespace ys3d {
 			var indices = [];
 			var vertices = [];
 			var uvs = [];
+			var normals = [];
 
 			// helper variables
 
@@ -38,6 +39,7 @@ namespace ys3d {
 			this._indices = indices;
 			this._vertices = vertices;
 			this._uvs = uvs;
+			this._normals = normals;
 
 			function buildPlane(u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex) {
 
@@ -86,7 +88,7 @@ namespace ys3d {
 
 						// now apply vector to normal buffer
 
-						// normals.push( vector.x, vector.y, vector.z );
+						normals.push( vector.x, vector.y, vector.z );
 
 						// uvs
 
