@@ -1,11 +1,6 @@
 namespace ys3d {
-    export enum SIDE {
-        FRONT,
-        BACK,
-        DOUBLE
-    }
     export class Mesh3D extends Object3D {
-        constructor(geometry: PIXI.Geometry, shader: PIXI.Shader, side: ys3d.SIDE = SIDE.FRONT) {
+        constructor(geo: ys3d.PIXIGeometry, mat:ys3d.Material | any) {
             super();
             this.visible = true;
             this.worldPosition = new Vector4();
@@ -13,20 +8,28 @@ namespace ys3d {
             state.depthTest = true; //深度检测
             state.offsets = true;//深度冲突
             state.polygonOffset = 10.0;//深度冲突
-            if (side == SIDE.FRONT) {
+            if (mat.side == MaterialSide.FRONT) {
                 state.culling = true;//隐藏面剔除
-            } else if (side == SIDE.BACK) {
+            } else if (mat.side == MaterialSide.BACK) {
                 state.culling = true;//隐藏面剔除
                 state.clockwiseFrontFace = true;
             }
-
-            this.$display = new PIXI.Mesh(geometry, shader, state);
+            const ma = <IMaterial>mat;
+            ma.bindAttribute(geo);
+            ma.bindMesh(this);
+            this.pixiGeo = geo;
+            this.$display = new PIXI.Mesh(geo.pixiGeo, mat.pixiShader, state);
         }
 
         public worldPosition: Vector4;
+        private pixiGeo: ys3d.PIXIGeometry;
         protected $display: PIXI.Mesh;
         public get display() {
             return this.$display;
+        }
+
+        public get geometry() {
+            return this.pixiGeo;
         }
 
         public draw(scene: Scene, cam: Camera) {
