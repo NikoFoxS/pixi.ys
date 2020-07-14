@@ -13,16 +13,18 @@ namespace ys3d {
 
 			this.matrix = Matrix4.create();
 			this.worldMatrix = Matrix4.create();
+			this.worldInverseTransposeMatrix = Matrix4.create();
 
-			this.rotation.onChange = () => { 
+			this.rotation.onChange = () => {
 				//欧拉角改变后，更新四元素。更新后的四元素提供给模型变换矩阵用。
-				this.quat.fromEuler(this.rotation) 
+				this.quat.fromEuler(this.rotation)
 			};
-			this.quat.onChange = () => { 
+			this.quat.onChange = () => {
 				//四元素改变后，更新欧拉角。
-				this.rotation.fromQuaternion(this.quat) 
+				this.rotation.fromQuaternion(this.quat)
 			};
-			this.rotation.set(0,0,0);
+			this.rotation.set(0, 0, 0);
+			// this.updateMatrixWorld();
 		}
 
 		public name: string;
@@ -43,6 +45,8 @@ namespace ys3d {
 		public matrix: Matrix4;
 		//世界变换矩阵
 		public worldMatrix: Matrix4;
+		//世界变换矩阵的逆转置
+		public worldInverseTransposeMatrix: Matrix4;
 
 		public updateMatrix() {
 			const matrix = this.matrix;
@@ -64,6 +68,11 @@ namespace ys3d {
 				//无父级
 				this.worldMatrix.copy(this.matrix);
 			}
+			//就逆和转置,光照用。
+			let mtx = new Matrix4();
+			Matrix4.invert(mtx,this.worldMatrix);
+			Matrix4.transpose(mtx,mtx);
+			this.worldInverseTransposeMatrix.copy(mtx);
 
 			//更新下一层级
 			this.children.forEach(child => {
@@ -96,7 +105,7 @@ namespace ys3d {
 			}
 		}
 		/**逐层遍历 */
-		public traverse(callback:Function) {
+		public traverse(callback: Function) {
 			//如果返回true，就停止下一层的遍历。
 			if (callback(this)) return;
 			//遍历下一层
@@ -107,7 +116,7 @@ namespace ys3d {
 
 	}
 
-	export class Group extends Object3D{
+	export class Group extends Object3D {
 		public constructor() {
 			super();
 			this.type = 'Group';
@@ -116,7 +125,7 @@ namespace ys3d {
 	}
 
 	export class Scene extends Object3D {
-		public constructor(w:number, h:number) {
+		public constructor(w: number, h: number) {
 			super();
 			this.type = 'Scene';
 			this.$display = new PIXI.Container();
@@ -128,8 +137,7 @@ namespace ys3d {
 		}
 
 		private $display: PIXI.Container;
-		public get display()
-		{
+		public get display() {
 			return this.$display;
 		}
 	}
