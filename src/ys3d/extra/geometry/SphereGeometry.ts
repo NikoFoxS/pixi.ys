@@ -1,5 +1,5 @@
 namespace ys3d {
-    export class SphereGeometry extends ys3d.Geometry {
+    export class SphereGeometry extends PIXIGeometry {
         constructor(radius = 100,
             widthSegments = 16,
             heightSegments = Math.ceil(widthSegments * 0.5),
@@ -83,7 +83,6 @@ namespace ys3d {
             this._uvs = uv;
             this._normals = normal;
             this._indices = index;
-
 
         }
     }

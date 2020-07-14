@@ -1,11 +1,11 @@
 namespace ys3d {
-  export class ObjOption {
+  export class OptionObjGeometry {
     public scale: number = 1;
     public uvFlipX: boolean = false;
     public uvFlipY: boolean = false;
   }
-  export class ObjGeometry extends Geometry {
-    constructor(objTxt: string, option?: ObjOption, mtlTxt?: string) {
+  export class ObjGeometry extends PIXIGeometry {
+    constructor(objTxt: string, option?: OptionObjGeometry, mtlTxt?: string) {
       super();
 
       const info = this.parseData(objTxt, option, mtlTxt);
@@ -15,7 +15,7 @@ namespace ys3d {
       this._normals = info.normals;
     }
 
-    private parseData(objTxt: string, option?: ObjOption, mtlTxt?: string) {
+    private parseData(objTxt: string, option?: OptionObjGeometry, mtlTxt?: string) {
       const vertices: number[] = [];
       const uvs: number[] = [];
       const colors: number[] = [];
@@ -23,7 +23,7 @@ namespace ys3d {
       const normals: number[] = [];
 
       if (!option) {
-        option = new ObjOption();
+        option = new OptionObjGeometry();
       }
 
       //清除前后空格

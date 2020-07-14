@@ -1,6 +1,6 @@
 namespace ys3d {
 
-	export class PlaneGeometry extends Geometry {
+	export class PlaneGeometry extends PIXIGeometry {
 
 		static buildPlane(position, normal, uv, index, width, height, depth, wSegs=1, hSegs=1, u = 0, v = 1, w = 2, uDir = 1, vDir = -1, i = 0, ii = 0) {
 			const io = i;

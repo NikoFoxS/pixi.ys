@@ -1,7 +1,8 @@
 /// <reference path="../../core/Geometry.ts" />
+/// <reference path="./PIXIGeometry.ts" />
 
 namespace ys3d {
-	export class BoxGeometry extends Geometry {
+	export class BoxGeometry extends PIXIGeometry {
 		public constructor(width, height, depth) {
 			super();
 
