@@ -40,6 +40,7 @@ namespace ys3d {
 
 		public subtract(b: Vector3) {
 			Vector3.subtract(this, this, b);
+			return this;
 		}
 
 		public scale(v: number) {
@@ -56,6 +57,12 @@ namespace ys3d {
 
 		public cross(b: Vector3) {
 			Vector3.cross(this, this, b);
+		}
+
+		public copy(b: Vector3)
+		{
+			Vector3.copy(this,b);
+			return this;
 		}
 
 		public static create(x = 0, y = 0, z = 0): ys3d.Vector3 {
@@ -150,6 +157,13 @@ namespace ys3d {
 			out[0] = ax + t * (b[0] - ax);
 			out[1] = ay + t * (b[1] - ay);
 			out[2] = az + t * (b[2] - az);
+		}
+		/**复制 */
+		public static copy(ut: Vector3, a: Vector3)
+		{
+			ut[0]=a[0];
+			ut[1]=a[1];
+			ut[2]=a[2];
 		}
 
 	}
