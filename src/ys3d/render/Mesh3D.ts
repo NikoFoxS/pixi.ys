@@ -1,6 +1,11 @@
 namespace ys3d {
+
+    let m = ys3d.Matrix4.create();
+    let v = ys3d.Matrix4.create();
+    let p = ys3d.Matrix4.create();
+
     export class Mesh3D extends Object3D {
-        constructor(geo: ys3d.PIXIGeometry, mat:ys3d.Material | any) {
+        constructor(geo: ys3d.PIXIGeometry, mat: ys3d.Material | any) {
             super();
             this.visible = true;
             this.worldPosition = new Vector4();
@@ -33,12 +38,8 @@ namespace ys3d {
         }
 
         public draw(scene: Scene, cam: Camera) {
-
             this.display.parent && this.display.parent.addChild(this.display);
-
-            let m = ys3d.Matrix4.create();
-            let v = ys3d.Matrix4.create();
-            let p = ys3d.Matrix4.create();
+            
             m.copy(this.worldMatrix);
             v.copy(cam.viewMatrix);
             p.copy(cam.projectionMatrix);
