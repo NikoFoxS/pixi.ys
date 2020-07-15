@@ -33,7 +33,6 @@ namespace app {
             const scene = new ys3d.Scene(stageW, stageH);
             // const geo = new ys3d.PIXIGeometry(new ys3d.PlaneGeometry(128, 256));
 
-
             ys.tikcer.add(() => {
                 render.render(scene, cam);
             })
@@ -64,75 +63,35 @@ namespace app {
             // var play = false;
 
             var g = new ys3d.Group();
-                scene.addChild(g);
-                ys.tikcer.add(() => {
-                    g.rotation.y += 1;
-                })
+            scene.addChild(g);
+            ys.tikcer.add(() => {
+                g.rotation.y += 1;
+            })
 
-            btn.on('pointertap', () => {
-                // play = !play;
-                // play ? (s.play()):(s.stop())
-                // console.log(play);
+            this.interactive = true;
+            // this.on()
 
-                // RES.getResByUrl('https://webglfundamentals.org/webgl/resources/models/book-vertex-chameleon-study/book.obj', (res) => {
-                // console.log(res);
+            var geo = new ys3d.SphereGeometry(100);
+            var mat = new ys3d.ColorMaterial(0xffff00);
+            var mesh = new ys3d.Mesh3D(geo, mat);
+            scene.addChild(mesh);
+            mesh.position.z = - 500;
 
-                // var tex = RES.getRes('body_6_png') as PIXI.Texture;
-                
-                // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),0.05)
+            this.addChild(mesh.display);
 
-                // var buffer = new ys3d.TextureVertexBuffer(geo.vertices, geo.uvs);
-                // var buffer = new ys3d.ColorVertexBuffer(geo.vertices, geo.colors)
+            var raycast = new ys3d.RayCaster();
 
-                // var shader = new ys3d.TexureShader(tex);
-                // var shader = new ys3d.ColorShader();
-                // console.log(geo.vertices.length,geo.uvs.length,geo.normals.length);
+            this.on('pointertap', (e: PIXI.InteractionEvent) => {
 
-                // var buffer = new ys3d.TextureLightBuffer(geo.vertices,geo.uvs,geo.normals);
-                // var shader = new ys3d.TextureLightShader(tex,[0.3,1,0.1]);
+                var pt = e.data.getLocalPosition(ys.stage);
+                var v2 = new ys3d.Vector2((pt.x - stageHalfW) / stageW, (-pt.y + stageHalfH) / stageH);
+                v2.scale(2);
+                console.log('v2:',v2);
 
-                // var geo2 = new ys3d.BoxGeometry(100,100,100);
-                // var buffer = new ys3d.TextureBuffer(geo2.vertices,geo2.uvs,geo2.indices);
-                // var shader = new ys3d.TexureShader(RES.getRes('headimg_jpg'));
+                raycast.setFromCamera(v2,cam);
+                var arr = raycast.intersect([mesh]);
+                console.log(arr);
 
-                // var geo = new ys3d.BoxGeometry(100,100,100);
-                // var geo2 = new ys3d.SphereGeometry(3000);
-
-                // var buffer = new ys3d.TextureBuffer(geo2.vertices,geo2.uvsPixi,geo2.indices);
-                // var shader = new ys3d.TexureShader(RES.getRes('pano_jpg'));
-
-                // var buffer = new ys3d.ColorLightBuffer(geo.vertices,geo.colors,geo.normals);
-                // var shader = new ys3d.ColorLightShader([0.1,1,0],[0.3,0.3,0.3]);
-                // var mat = new ys3d.TextureMaterial(RES.getRes('headimg_jpg'));
-                // var opt = new ys3d.ObjOption();
-                // opt.scale = 1/30;
-                // opt.uvFlipY = true;
-
-                var opt = new ys3d.OptionObjGeometry();
-                opt.scale = 1000;
-
-                // var geo = new ys3d.ObjGeometry(RES.getRes('weapon_obj'),opt)
-                // var mat = new ys3d.TextureLightMaterial(RES.getRes('weapon_png'),new ys3d.Vector3(0,100,0),0xffffff);
-
-                
-                var geo = new ys3d.ObjGeometry(RES.getRes('sniperCamo_obj'),opt,RES.getRes('sniperCamo_mtl'))
-                
-                var mat = new ys3d.ColorsMaterial();
-
-                console.log(geo.vertices,geo.colors,geo.indices);
-                let mesh = new ys3d.Mesh3D(geo, mat);
-
-                this.addChild(mesh.display);
-                // scene.addChild(mesh);
-                mesh.position.z = - 200;
-                // mesh.position.y = -100;
-
-                scene.addChild(mesh);
-
-                ys.tikcer.add(() => {
-                    mesh.rotation.y += 0.5;
-                    // mesh.rotation.x += 0.2;
-                })
             }, this)
 
             // }, this);
