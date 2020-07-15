@@ -6,7 +6,6 @@ namespace ys3d {
     }
 
     export interface IMaterial {
-
         bindAttribute(geo: ys3d.PIXIGeometry): void;
         bindMesh(mesh: ys3d.Mesh3D): void;
     }
@@ -30,7 +29,6 @@ namespace ys3d {
 
         protected createShader(p: PIXI.Program, uniform) {
             uniform.mvpMatrix = this.mtx;
-            console.log('uniform', uniform)
             this.shader = new PIXI.Shader(p, uniform);
         }
 
