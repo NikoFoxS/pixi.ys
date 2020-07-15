@@ -1,8 +1,11 @@
 /// <reference path="../math/Vector3.ts" />
+/// <reference path="../math/Matrix4.ts" />
 /// <reference path="./Object3D.ts" />
 
 namespace ys3d {
 	let tmp: Vector3 = Vector3.create();
+	let tempMat4 = Matrix4.create();
+
 	export class Camera extends Object3D {
 		public constructor(fov:number, aspect:number, near = 0.1, far = 2000) {
 			super();
@@ -83,15 +86,12 @@ namespace ys3d {
 			return tmp;
 		}
 
-		public unproject(x:number, y:number) {
-			let tempMat4 = Matrix4.create();
+		public unproject(v:Vector3) {
 			tempMat4.copy(this._projectionMatrix);
 			tempMat4.inverse();
-			tmp.set(x, y, 0);
-			tmp = tempMat4.transformV3(tmp);
-			tmp = this.worldMatrix.transformV3(tmp);
-
-			return tmp;
+			v = tempMat4.transformV3(v);
+			v = this.worldMatrix.transformV3(v);
+			return this;
 		}
 
 	}
