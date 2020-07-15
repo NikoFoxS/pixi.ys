@@ -14,12 +14,15 @@ module ys3d {
 			scene.updateMatrixWorld();
 			cam.updateMatrixWorld();
 
-			const renderList:any = [];
+			const renderList: any = [];
 			//寻找渲染对象
-			scene.traverse((child:ys3d.Mesh3D) => {
+			scene.traverse((child: ys3d.Mesh3D) => {
 				//to do 剔除显示范围外的对象
+				child.display && (child.display.visible = child.visible);
 				//如果不显示，停止下一层。
-				if (!child.visible) return true;
+				if (!child.visible) {
+					return true;
+				}
 				//如果无draw方法,跳过
 				if (!child.draw) return;
 				renderList.push(child);
@@ -57,8 +60,8 @@ module ys3d {
 				}
 
 			});
-			
-			renderList.forEach((node: Mesh3D, index:number) => {
+
+			renderList.forEach((node: Mesh3D, index: number) => {
 				const pos = node.worldPosition;
 				node.draw(scene, cam);
 			})
