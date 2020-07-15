@@ -36,6 +36,7 @@ namespace ys3d {
 
 		public add(b: Vector3) {
 			Vector3.add(this, this, b);
+			return this;
 		}
 
 		public subtract(b: Vector3) {
@@ -45,6 +46,7 @@ namespace ys3d {
 
 		public scale(v: number) {
 			Vector3.scale(this, this, v);
+			return this;
 		}
 
 		public getLength() {
@@ -63,6 +65,29 @@ namespace ys3d {
 		{
 			Vector3.copy(this,b);
 			return this;
+		}
+
+		public normalize()
+		{
+			Vector3.normalize(this,this);
+			return this;
+		}
+
+		public applyMatrix4(mat:Matrix4)
+		{
+			Matrix4.transformVector3(this,this,mat);
+		}
+
+		public transformDirection(mat4:Matrix4) {
+			const x = this[0];
+			const y = this[1];
+			const z = this[2];
+	
+			this[0] = mat4[0] * x + mat4[4] * y + mat4[8] * z;
+			this[1] = mat4[1] * x + mat4[5] * y + mat4[9] * z;
+			this[2] = mat4[2] * x + mat4[6] * y + mat4[10] * z;
+	
+			return this.normalize();
 		}
 
 		public static create(x = 0, y = 0, z = 0): ys3d.Vector3 {
@@ -131,6 +156,7 @@ namespace ys3d {
 		 * a·b>0    方向基本相同，夹角在0°到90°之间
      	 * a·b=0    正交，相互垂直  
          * a·b<0    方向基本相反，夹角在90°到180°之间 
+		 * 还可以求向量a在向量b上的投影长度。a.b/|a|
 		*/
 		public static dot(a: Vector3, b: Vector3) {
 			return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
