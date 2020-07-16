@@ -120,6 +120,25 @@ namespace GG {
         return PIXI.Texture.from(c);
     }
 
+	export function randomNumber(min: number, max: number): number {
+		if (max < min) {
+			var t = max;
+			max = min;
+			min = t;
+		}
+		return min + Math.random() * (max - min);
+	}
+
+	export function randomInt(min: number, max: number): number {
+		var num = randomNumber(min, max);
+
+		return parseInt(num + "");
+	}
+
+	export function randomArr(arr: any[]): any {
+		return arr[Math.random() * arr.length | 0];
+	}
+
 
 }
 
