@@ -71,7 +71,7 @@ namespace app {
             this.interactive = true;
             // this.on()
 
-            var geo = new ys3d.SphereGeometry(100);
+            var geo = new ys3d.SphereGeometry(30);
             var mat = new ys3d.ColorMaterial(0xffff00);
             var mesh = new ys3d.Mesh3D(geo, mat);
             scene.addChild(mesh);
@@ -81,6 +81,25 @@ namespace app {
 
             var raycast = new ys3d.RayCaster();
 
+            var i = 10;
+            var map = RES.getRes('headimg_jpg');
+
+            var arr = [];
+
+            while(i--)
+            {
+                var geo = new ys3d.BoxGeometry(50,50,50);
+                var mat = new ys3d.TextureMaterial(map);
+                var box = new ys3d.Mesh3D(geo,mat);
+                box.position.x = -100 + Math.random()*200;
+                box.position.z = -300 + Math.random()*-400;
+                box.position.y = -300 + Math.random()*600;
+                scene.addChild(box);
+                this.addChild(box.display);
+                arr.push(box);
+            }
+            arr.push(mesh);
+
             this.on('pointertap', (e: PIXI.InteractionEvent) => {
 
                 var pt = e.data.getLocalPosition(ys.stage);
@@ -89,8 +108,11 @@ namespace app {
                 console.log('v2:',v2);
 
                 raycast.setFromCamera(v2,cam);
-                var arr = raycast.intersect([mesh]);
-                console.log(arr);
+                var a = raycast.intersect(arr);
+                a.forEach(ms=>{
+                    ms.mesh.visible = false;
+                })
+                console.log(a);
 
             }, this)
 
