@@ -108,10 +108,15 @@ namespace app {
                 console.log('v2:',v2);
 
                 raycast.setFromCamera(v2,cam);
-                var a = raycast.intersect(arr);
-                a.forEach(ms=>{
-                    ms.mesh.visible = false;
-                })
+                var a = raycast.intersect(arr,'box');
+                if(a.length)
+                {
+                    a[0].mesh.visible = false;
+                    setTimeout(() => {
+                        a[0].mesh.visible = true;
+                    }, 3000);
+                }
+             
                 console.log(a);
 
             }, this)
