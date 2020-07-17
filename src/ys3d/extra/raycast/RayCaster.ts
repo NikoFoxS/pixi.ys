@@ -1,6 +1,10 @@
 namespace ys3d {
-    const tempMat4 = Matrix4.create();
-    const center = Vector3.create();
+
+    export class RayHit {
+        public point: Vector3;
+        public distance: number;
+        public mesh: Mesh3D;
+    }
 
     export class RayCaster {
         private ray: Ray;
@@ -18,19 +22,49 @@ namespace ys3d {
             this.ray.direction.subtract(this.ray.origin).normalize();
         }
 
-        public intersect(mesh: Mesh3D[]): any[] {
-            const hits = [];
-            mesh.forEach(m => {
-                //计算圆球
-                var geo = m.geometry;
-                geo.bounds || geo.calBoundingSphere();//计算包围盒和包围球
-                center.copy(m.position);
+        /**为了提高效率，按照包围球和包围盒来处理 */
+        public intersect(meshs: Mesh3D[], type = 'sphere'): RayHit[] {
+            const hits: RayHit[] = [];
+            meshs.forEach(mesh => {
+                if (mesh.visible) {
+                    var geo = mesh.geometry;
+                    if(type == 'sphere')
+                    {
+                        geo.bounds || geo.calBoundingSphere();//计算包围球
+                    }else
+                    {
+                        (geo.bounds && geo.bounds.radius != Infinity) || geo.calBoundingBox();//计算包围盒
+                    }
+                    
+                    let v3:ys3d.Vector3;
+                    if(type == 'sphere')
+                    {
+                        v3 = this.ray.intersectSphere(mesh);
+                    }else
+                    {
+                        v3 = this.ray.intersectBox(mesh);
+                    }
+                    
+                    if (v3) {
+                        var hit = new RayHit();
+                        hit.point = v3;
+                        hit.mesh = mesh;
+                        hit.distance = Vector3.distance(v3, this.ray.origin);
+                        hits.push(hit);
+                    };
+                }
 
-                var v3 = this.ray.intersectSphere(center, geo.bounds.radius);
-                if (v3) { hits.push({ mesh: m, point: v3 }) };
             })
+            //按距离进行排序
+            hits.sort((a, b) => { return a.distance - b.distance });
 
             return hits;
+        }
+
+        public intersectBox() {
+            // hit.point = pt;
+            // hit.mesh = mesh;
+            // hit.distance = ys3d.Vector3.distance(pt,this.origin);
         }
     }
 }
