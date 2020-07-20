@@ -37,7 +37,7 @@ namespace app {
                 render.render(scene, cam);
             })
 
-            const opt = new ysui.ButtonOption();
+            const opt = new ys.ButtonOption();
             opt.width = 250;
             opt.height = 100;
             const tex = GG.texGradient(opt.width, opt.height, 0, 0, 0, opt.height, ['#ff0000', '#ffcccc'], [0, 1])
@@ -47,7 +47,7 @@ namespace app {
             opt.shadowOffsetY = 8;
             opt.shandowAplha = 0.5;
             opt.chamfer = opt.height >> 1;
-            const btn = new ysui.Button(opt);
+            const btn = new ys.Button(opt);
             btn.label = 'Start';
             btn.style = new PIXI.TextStyle({
                 align: 'center', fontSize: 50,

@@ -1,4 +1,4 @@
-namespace ysui {
+namespace ys {
     export class ButtonOption {
         public width: number;
         public height: number;

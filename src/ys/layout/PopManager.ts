@@ -1,4 +1,4 @@
-namespace ysui {
+namespace ys {
 	/**弹层统一管理管理 */
 	export class PopManager {
 		public constructor() {
@@ -20,6 +20,7 @@ namespace ysui {
 				g.endFill();
 				PopManager.popblock = g;
 				PopManager.popblock.alpha = blockAlpha;
+				PopManager.popblock.interactive = true;
 				PopManager.popblock.cacheAsBitmap = true;
 			}
 			const block = PopManager.popblock;
@@ -29,8 +30,6 @@ namespace ysui {
 
 			layer.addChild(block);
 			layer.addChild(d);
-
-
 
 			d.once('removed', () => {
 				//remove后，numChildren不会马上-1

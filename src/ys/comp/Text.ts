@@ -1,4 +1,4 @@
-namespace ysui {
+namespace ys {
 	const cjk: RegExp = new RegExp(/([\u4e00-\u9fa5]|[\uAC00-\uD7A3]|[\u0800-\u4e00])/ig);//中日韩
 
 	class InputManager {
@@ -90,7 +90,7 @@ namespace ysui {
 		private inputList: TextFieldInput[] = [];
 		private activeTxt: TextFieldInput;
 
-		public add(txt: ysui.TextFieldInput) {
+		public add(txt: ys.TextFieldInput) {
 			if (this.inputList.length == 0) {
 				document.body.appendChild(this.input);
 				this.addEvt();
@@ -122,7 +122,7 @@ namespace ysui {
 
 		private needFocus: boolean;
 		public select(e: PIXI.InteractionEvent) {
-			const txt = e.target as ysui.TextFieldInput;
+			const txt = e.target as ys.TextFieldInput;
 			if (this.activeTxt && txt != this.activeTxt) {
 				this.input.blur();
 			}
@@ -132,7 +132,7 @@ namespace ysui {
 			console.log('active', txt)
 		}
 
-		private sizeTo(txt: ysui.TextFieldInput) {
+		private sizeTo(txt: ys.TextFieldInput) {
 			const scale = ys.stageScale;
 			const style = txt.style as PIXI.TextStyle;
 			const input = this.input;
@@ -183,7 +183,7 @@ namespace ysui {
 		}
 
 		public locale(t: string, wordWrapWidth: number = 0) {
-			t = ysui.getLocale(t);
+			t = ys.getLocale(t);
 			if (wordWrapWidth > 0) {
 				this.wrapWord(t, wordWrapWidth);
 			} else {

@@ -24,7 +24,7 @@ namespace GG {
     }
 
     export function popUp(d: PIXI.Container, a: number) {
-        ysui.PopManager.popUp(d, a)
+        ys.PopManager.popUp(d, a)
     }
 
     export function removeDisplayObject(d: PIXI.Container) {
