@@ -7,7 +7,19 @@ namespace app {
         public bg: PIXI.Sprite;
         protected onInit() {
 
-            // GG.newRect(stageW, stageH, 0xff00ff, this);
+            GG.newRect(stageW, stageH, 0xff00ff, this);
+
+            const pp = GG.newRect(300,300,0xff0000);
+
+            pp.interactive = true;
+            pp.once('pointerdown',()=>{
+                GG.removeDisplayObject(pp);
+            })
+
+            GG.popUp(pp);
+            GG.layoutCenter(pp);
+
+            return;
 
             const m = new PIXI.Matrix();
             const sp = PIXI.Sprite.from('resource/headimg.jpg', { scaleMode: PIXI.SCALE_MODES.NEAREST });
