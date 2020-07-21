@@ -52,6 +52,7 @@ jspm_packages/
 
 # Optional eslint cache
 .eslintcache
+.DS_Store
 
 # Microbundle cache
 .rpt2_cache/

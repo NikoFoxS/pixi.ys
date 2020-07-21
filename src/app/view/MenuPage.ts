@@ -7,7 +7,19 @@ namespace app {
         public bg: PIXI.Sprite;
         protected onInit() {
 
-            // GG.newRect(stageW, stageH, 0xff00ff, this);
+            GG.newRect(stageW, stageH, 0xff00ff, this);
+
+            const pp = GG.newRect(300,300,0xff0000);
+
+            pp.interactive = true;
+            pp.once('pointerdown',()=>{
+                GG.removeDisplayObject(pp);
+            })
+
+            GG.popUp(pp);
+            GG.layoutCenter(pp);
+
+            return;
 
             const m = new PIXI.Matrix();
             const sp = PIXI.Sprite.from('resource/headimg.jpg', { scaleMode: PIXI.SCALE_MODES.NEAREST });
@@ -37,7 +49,7 @@ namespace app {
                 render.render(scene, cam);
             })
 
-            const opt = new ysui.ButtonOption();
+            const opt = new ys.ButtonOption();
             opt.width = 250;
             opt.height = 100;
             const tex = GG.texGradient(opt.width, opt.height, 0, 0, 0, opt.height, ['#ff0000', '#ffcccc'], [0, 1])
@@ -47,7 +59,7 @@ namespace app {
             opt.shadowOffsetY = 8;
             opt.shandowAplha = 0.5;
             opt.chamfer = opt.height >> 1;
-            const btn = new ysui.Button(opt);
+            const btn = new ys.Button(opt);
             btn.label = 'Start';
             btn.style = new PIXI.TextStyle({
                 align: 'center', fontSize: 50,

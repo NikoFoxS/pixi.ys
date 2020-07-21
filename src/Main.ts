@@ -24,7 +24,7 @@ class Main extends ys.Application{
             return url
         }
         //处理多语言
-        ysui.getLocale = (t: string) => {
+        ys.getLocale = (t: string) => {
             return t;
         }
         
