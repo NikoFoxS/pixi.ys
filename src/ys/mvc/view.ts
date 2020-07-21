@@ -4,6 +4,9 @@ namespace ys {
 		public constructor(view: PIXI.Container) {
 			this._view = view;
 			ys.mvc.on(MVC.MVC_NOTICE, this._onNotice, this);
+			view.once('removed', () => {
+				ys.mvc.off(MVC.MVC_NOTICE, this._onNotice, this);
+			})
 		}
 		private _view: any;
 		public getView() {
@@ -43,12 +46,13 @@ namespace ys {
 		}
 
 		/**当view.onInit执行完毕后，会触发该方法 */
+		//添加界面逻辑
+		//通过sendNotice发送通知
+		//通过getProxy获取数据
+		//通过listenNotice侦听感兴趣的通知
+		//通过onNotice处理感兴趣的通知
 		public onInit() {
-			//添加界面逻辑
-			//通过sendNotice发送通知
-			//通过getProxy获取数据
-			//通过listenNotice侦听感兴趣的通知
-			//通过onNotice处理感兴趣的通知
+
 		}
 
 		protected listenNotice(): string[] {
@@ -78,7 +82,7 @@ namespace ys {
 		}
 	}
 
-	export class Page extends View implements ILoadGroupReport{
+	export class Page extends View implements ILoadGroupReport {
 		constructor(mediatorClass?: any, groupName?: string) {
 			super();
 			//加载资源组
