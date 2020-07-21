@@ -1,20 +1,17 @@
 //快捷工具类，为什么叫GG,应为键盘上方便按到。
 namespace GG {
     const hello = decodeURIComponent('%E4%B8%8E%E6%97%B6%E4%BA%92%E5%8A%A8%7C%E9%BA%BB%E8%BE%A3%E5%B0%8F%E6%B8%B8%E6%88%8F%E3%80%91%20vx%EF%BC%9ANikoFoxS');
-    let pages: ys.Page[] = [];
 
     export function showPage(pageclass: any, clear: boolean = true) {
         console.log('show page', pageclass.name)
         const page = new pageclass() as ys.Page;
-        clear && ys.stage.removeChildren();
-        ys.stage.addChild(page);
+        clear && ys.stage.root.removeChildren();
+        ys.stage.root.addChild(page);
 
         if (page.cache) {
 
         }
-
         page.on('removed', () => {
-
         }, this);
 
     }
@@ -23,7 +20,7 @@ namespace GG {
         console.log(msg);
     }
 
-    export function popUp(d: PIXI.Container, a: number) {
+    export function popUp(d: PIXI.Container, a: number = 0.7) {
         ys.PopManager.popUp(d, a)
     }
 
@@ -71,7 +68,7 @@ namespace GG {
         d.pivot.x = x * d.width;
         d.pivot.y = y * d.height;
     }
-
+    //布局
     export function layoutLeft(d: PIXI.Container, left: number) {
         d.x = left + d.pivot.x;
         d.pivot
@@ -87,6 +84,11 @@ namespace GG {
 
     export function layoutMiddleY(d: PIXI.Container, offset = 0) {
         d.y = stageHalfH - d.height * 0.5 + d.pivot.y + offset;
+    }
+
+    export function layoutCenter(d, offsetX = 0, offsetY = 0) {
+        layoutMiddleX(d, offsetX);
+        layoutMiddleY(d, offsetY);
     }
 
     export function layoutTop(d: PIXI.Container, top: number) {
@@ -120,24 +122,24 @@ namespace GG {
         return PIXI.Texture.from(c);
     }
 
-	export function randomNumber(min: number, max: number): number {
-		if (max < min) {
-			var t = max;
-			max = min;
-			min = t;
-		}
-		return min + Math.random() * (max - min);
-	}
+    export function randomNumber(min: number, max: number): number {
+        if (max < min) {
+            var t = max;
+            max = min;
+            min = t;
+        }
+        return min + Math.random() * (max - min);
+    }
 
-	export function randomInt(min: number, max: number): number {
-		var num = randomNumber(min, max);
+    export function randomInt(min: number, max: number): number {
+        var num = randomNumber(min, max);
 
-		return parseInt(num + "");
-	}
+        return parseInt(num + "");
+    }
 
-	export function randomArr(arr: any[]): any {
-		return arr[Math.random() * arr.length | 0];
-	}
+    export function randomArr(arr: any[]): any {
+        return arr[Math.random() * arr.length | 0];
+    }
 
 
 }

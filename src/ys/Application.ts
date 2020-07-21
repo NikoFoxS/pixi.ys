@@ -10,22 +10,87 @@ let stageW: number, stageH: number, stageHalfW: number, stageHalfH: number;
 
 namespace ys {
 
-    export const stage: PIXI.Container = new PIXI.Container();
+    export class Stage extends PIXI.Container {
+        constructor() {
+            super();
+            this._root = new PIXI.Container();
+            this.addChild(this._root);
+            //屏蔽stage的remove方法
+            this.removeChildren = (b?, e?): PIXI.DisplayObject[] => { return };
+            this.removeChildAt = (a?): PIXI.DisplayObject => { return };
+            this.removeChild = (a?): PIXI.DisplayObject => { 
+                if(a != this._root)
+                {
+                    super.removeChild(a);
+                }
+                return };
+        }
+        private _root: PIXI.Container;
+        public get root() {
+            return this._root;
+        }
+    }
+
+    export const stage: ys.Stage = new ys.Stage();
     export let renderer: PIXI.Renderer;
     export let wxgame: boolean = false;
+
+    /**弹层统一管理管理 */
+    export class PopManager {
+        public constructor() {
+        }
+
+        public static popUp(d: PIXI.Container, blockAlpha = 0.7) {
+            if (!d) {
+                return;
+            }
+            if (!PopManager.layer) {
+                PopManager.layer = new PIXI.Container();
+            }
+
+            if (!PopManager.block) {
+                const g = new PIXI.Graphics();
+                g.beginFill(0x000000);
+                g.drawRect(0, 0, stageW, stageH);
+                g.endFill();
+                g.interactive = true;
+                PopManager.block = g;
+            }
+
+            const block = PopManager.block;
+            const layer = PopManager.layer;
+
+            ys.stage.addChild(layer);
+            layer.addChild(block);
+            layer.addChild(d);
+
+            block.alpha = blockAlpha;
+
+            d.once('removed', () => {
+                //remove后，numChildren不会马上-1
+                if (layer.children.length == 1) {
+                    GG.removeDisplayObject(layer);
+                } else {
+                    layer.addChildAt(block, layer.children.length - 2);
+                }
+            }, this);
+        }
+        private static block: PIXI.Graphics;
+        private static layer: PIXI.Container;
+    }
 
     export interface ILoadGroupReport {
         onGroupStart(groupName: string): void;
         onGroupProgress(groupName: string, loaded: number, total: number, res: PIXI.LoaderResource): void;
         onGroupComplete(groupName: string): void;
     }
+
     export let stageScale: number = 1;
     export let canvas: HTMLCanvasElement;
     export let tikcer: PIXI.Ticker;
     export class Application implements ys.ILoadGroupReport {
         constructor(canvas: HTMLCanvasElement, cfg: Config) {
-            console.log('PIXI::', PIXI);
-            // PIXI.utils.skipHello();
+            PIXI.utils.skipHello();
 
             const ticker = PIXI.Ticker.shared;
             ys.tikcer = ticker;
@@ -56,25 +121,22 @@ namespace ys {
                     document.body.appendChild(stats.dom);
                     ticker.add(() => {
                         stats.begin();
-                        renderer.render(stage);
+                        renderer.render(ys.stage);
                         stats.end();
                     }, PIXI.UPDATE_PRIORITY.LOW);
                 } else {
                     ticker.add(() => {
-                        renderer.render(stage);
+                        renderer.render(ys.stage);
                     }, PIXI.UPDATE_PRIORITY.LOW);
                 }
             } else {
                 ticker.add(() => {
-                    renderer.render(stage);
+                    renderer.render(ys.stage);
                 }, PIXI.UPDATE_PRIORITY.LOW);
             }
             ticker.start();
-
-            var stage = ys.stage;
             RES.setup(cfg);
-
-            this.resize(canvas, stage, cfg);
+            this.resize(canvas, cfg);
             this.loadGroup(cfg);
 
         }
@@ -102,7 +164,7 @@ namespace ys {
             }, this);
         }
 
-        private resize(canvas: HTMLCanvasElement, stage: PIXI.Container, cfg: Config) {
+        private resize(canvas: HTMLCanvasElement, cfg: Config) {
             //屏幕适配
             const resize = () => {
                 const adapter = cfg.screenAdapter || new ys.ScreenAdapter();
@@ -112,7 +174,7 @@ namespace ys {
                 stageH = stageHeight;
                 stageHalfH = stageH >> 1;
                 console.log('scale', scale);
-                stage.scale.set(scale);
+                ys.stage.scale.set(scale);
                 if (!ys.wxgame) {
                     canvas.style.position = 'absolute';
                     canvas.style.top = '0px';
