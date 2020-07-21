@@ -7,26 +7,14 @@ namespace app {
         public bg: PIXI.Sprite;
         protected onInit() {
 
-            GG.newRect(stageW, stageH, 0xff00ff, this);
+            GG.newRect(stageW, stageH, 0x1099bb, this);
 
-            const pp = GG.newRect(300,300,0xff0000);
-
-            pp.interactive = true;
-            pp.once('pointerdown',()=>{
-                GG.removeDisplayObject(pp);
-            })
-
-            GG.popUp(pp);
-            GG.layoutCenter(pp);
-
-            return;
-
-            const m = new PIXI.Matrix();
-            const sp = PIXI.Sprite.from('resource/headimg.jpg', { scaleMode: PIXI.SCALE_MODES.NEAREST });
-            sp.width = stageW;
-            sp.height = stageH;
-            sp.alpha = 0.5;
-            this.addChild(sp);
+            // const m = new PIXI.Matrix();
+            // const sp = PIXI.Sprite.from('resource/headimg.jpg', { scaleMode: PIXI.SCALE_MODES.NEAREST });
+            // sp.width = stageW;
+            // sp.height = stageH;
+            // sp.alpha = 0.5;
+            // this.addChild(sp);
 
             const layer = new PIXI.Container();
             this.addChild(layer);
@@ -43,97 +31,43 @@ namespace app {
 
 
             const scene = new ys3d.Scene(stageW, stageH);
-            // const geo = new ys3d.PIXIGeometry(new ys3d.PlaneGeometry(128, 256));
 
             ys.tikcer.add(() => {
                 render.render(scene, cam);
             })
 
-            const opt = new ys.ButtonOption();
-            opt.width = 250;
-            opt.height = 100;
-            const tex = GG.texGradient(opt.width, opt.height, 0, 0, 0, opt.height, ['#ff0000', '#ffcccc'], [0, 1])
-            opt.fill = 0x2d85f3;
-
-            opt.shadowOffsetX = 0;
-            opt.shadowOffsetY = 8;
-            opt.shandowAplha = 0.5;
-            opt.chamfer = opt.height >> 1;
-            const btn = new ys.Button(opt);
-            btn.label = 'Start';
-            btn.style = new PIXI.TextStyle({
-                align: 'center', fontSize: 50,
-                fill: 0xffffff,
-            })
-
-            this.addChild(btn);
-            GG.layoutMiddleX(btn);
-            GG.layoutBottom(btn, 100);
-            btn.interactive = true;
-
-            // var s = new ys.Sound(RES.getRes('bgm_mp3'));
-            // var play = false;
-
-            var g = new ys3d.Group();
-            scene.addChild(g);
-            ys.tikcer.add(() => {
-                g.rotation.y += 1;
-            })
-
-            this.interactive = true;
-            // this.on()
-
-            var geo = new ys3d.SphereGeometry(30);
-            var mat = new ys3d.ColorMaterial(0xffff00);
-            var mesh = new ys3d.Mesh3D(geo, mat);
+            const option = new ys3d.OptionObjGeometry();
+            option.scale = 0.1;
+            option.uvFlipY = true;
+            const geo = new ys3d.ObjGeometry(RES.getRes('weapon_1_obj'), option);
+            const mat = new ys3d.TextureLightMaterial(RES.getRes('weapon_1_209_png'), new ys3d.Vector3(0, 0.5, 0), 0xff0000)
+            const mesh = new ys3d.Mesh3D(geo, mat);
             scene.addChild(mesh);
-            mesh.position.z = - 500;
+            mesh.position.z = - 200;
+            mesh.position.y = - 100;
+            mesh.position.x = 110;
 
             this.addChild(mesh.display);
 
-            var raycast = new ys3d.RayCaster();
+            const geobox = new ys3d.BoxGeometry(40, 100, 20);
+            const matcolor = new ys3d.ColorMaterial(0x000000);
+            const box = new ys3d.Mesh3D(geobox, matcolor);
 
-            var i = 10;
-            var map = RES.getRes('headimg_jpg');
+            scene.addChild(box);
 
-            var arr = [];
+            this.addChild(box.display);
+            box.position.z = - 100;
+            box.position.y = - 100;
+            box.position.x = 0;
+            box.rotation.z = -30;
+            box.rotation.x = -30;
 
-            while(i--)
-            {
-                var geo = new ys3d.BoxGeometry(50,50,50);
-                var mat = new ys3d.TextureMaterial(map);
-                var box = new ys3d.Mesh3D(geo,mat);
-                box.position.x = -100 + Math.random()*200;
-                box.position.z = -300 + Math.random()*-400;
-                box.position.y = -300 + Math.random()*600;
-                scene.addChild(box);
-                this.addChild(box.display);
-                arr.push(box);
-            }
-            arr.push(mesh);
+            mesh.rotation.y = 90;
 
-            this.on('pointertap', (e: PIXI.InteractionEvent) => {
+            ys.tikcer.add(() => {
+                // mesh.rotation.y += 1;
+            })
 
-                var pt = e.data.getLocalPosition(ys.stage);
-                var v2 = new ys3d.Vector2((pt.x - stageHalfW) / stageW, (-pt.y + stageHalfH) / stageH);
-                v2.scale(2);
-                console.log('v2:',v2);
-
-                raycast.setFromCamera(v2,cam);
-                var a = raycast.intersect(arr,'box');
-                if(a.length)
-                {
-                    a[0].mesh.visible = false;
-                    setTimeout(() => {
-                        a[0].mesh.visible = true;
-                    }, 3000);
-                }
-             
-                console.log(a);
-
-            }, this)
-
-            // }, this);
         }
 
     }
