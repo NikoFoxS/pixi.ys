@@ -22,6 +22,11 @@ namespace ys3d {
             this.ray.direction.subtract(this.ray.origin).normalize();
         }
 
+        public set(origin: Vector3, direction: Vector3)
+        {
+            this.ray.set(origin,direction);
+        }
+
         /**为了提高效率，按照包围球和包围盒来处理 */
         public intersect(meshs: Mesh3D[], type = 'sphere'): RayHit[] {
             const hits: RayHit[] = [];
@@ -61,10 +66,5 @@ namespace ys3d {
             return hits;
         }
 
-        public intersectBox() {
-            // hit.point = pt;
-            // hit.mesh = mesh;
-            // hit.distance = ys3d.Vector3.distance(pt,this.origin);
-        }
     }
 }
